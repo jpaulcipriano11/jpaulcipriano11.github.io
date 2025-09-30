@@ -427,21 +427,22 @@
     if (name && email && message) {
         const subject = "Hi! Let's Work Together";
 
-        // Build HTML body with bold labels
-        const body = 
-            "<b>Name:</b> " + encodeURIComponent(name) + "%0D%0A" +
-            "<b>Email:</b> " + encodeURIComponent(email) + "%0D%0A" +
-            "<b>Message:</b> " + encodeURIComponent(message);
+        // Use plain text with line breaks instead of HTML tags
+        const body =
+            "Name: " + name + "\n" +
+            "Email: " + email + "\n" +
+            "Message: " + message;
 
         window.location.href = 
             "https://mail.google.com/mail/?view=cm&fs=1" +
             "&to=jpaulcipriano@gmail.com" +
             "&su=" + encodeURIComponent(subject) +
-            "&body=" + body;
+            "&body=" + encodeURIComponent(body);
     } else {
         alert('Please fill all fields before sending.');
     }
 }
+
 
 // Form submission handler
         document.getElementById('contactForm').addEventListener('submit', function(e) {
@@ -451,4 +452,5 @@
     </script>
 </body>
 </html>
+
 
