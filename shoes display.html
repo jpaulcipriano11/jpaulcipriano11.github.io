@@ -1,0 +1,327 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shoes Suggestions for Tita Jenny and Tito Bimbo</title>
+  <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            sneakerpink: '#FF85A2',
+            sneakerblue: '#5885AF',
+            sneakerorange: '#FF7E5F',
+            darkbg: '#121212',
+            shoeCard: '#f8f9fa', // Light gray for shoe cards
+            cardBorder: '#e0e0e0', // Border color for cards
+            maleBlue: '#2c3e50', // Dark blue for male preference
+            maleBlueHover: '#34495e', // Hover color
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@300;500;700&display=swap');
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #121212;
+      color: #e0e0e0;
+    }
+    .title-font {
+      font-family: 'Bebas Neue', sans-serif;
+    }
+    .shoe-card {
+      background-color: #f8f9fa;
+      border: 1px solid #e0e0e0;
+      color: #333;
+      transition: all 0.3s;
+    }
+    .shoe-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    .shoe-image-container {
+      height: 280px;
+      overflow: hidden;
+    }
+    .shoe-image {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center;
+    }
+    .active-category {
+      @apply ring-2 ring-offset-2 ring-white ring-opacity-50;
+    }
+    /* Dark mode adjustments for the hero section overlay */
+    .hero-overlay {
+      background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6));
+    }
+    .testimonial-bg {
+      background: linear-gradient(to right, rgba(88, 133, 175, 0.1), rgba(255, 133, 162, 0.1));
+    }
+    .male-pref-btn {
+      background-color: #2c3e50;
+      color: white;
+      transition: all 0.3s;
+    }
+    .male-pref-btn:hover {
+      background-color: #34495e;
+    }
+  </style>
+</head>
+<body class="bg-darkbg text-textlight">
+
+  <!-- Hero Section -->
+  <div class="relative overflow-hidden bg-gradient-to-br from-sneakerpink to-sneakerorange py-20">
+    <div class="hero-overlay absolute inset-0"></div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+      <h1 class="title-font text-5xl md:text-7xl text-center text-white mb-6 tracking-wider">
+        Shoes Suggestions <br> 
+        <span class="text-yellow-200">for Tita Jenny</span> <i data-feather="heart" class="inline text-white w-10 h-10"></i> 
+        <span class="text-blue-100">Tito Bimbo</span>
+      </h1>
+      <p class="text-center text-white text-xl max-w-2xl mx-auto">
+        Tito Bimbo, Tita Jenny. Hara amung gustong shoes ni Daddy. Thank you po! We love you!
+      </p>
+    </div>
+  </div>
+
+  <!-- Categories Navigation -->
+  <div class="sticky top-0 z-10 bg-gray-900 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-center space-x-1 md:space-x-6 py-4">
+        <button class="category-btn px-4 py-2 rounded-full bg-sneakerblue text-white font-medium transition-all duration-300 hover:bg-opacity-90 active-category" data-category="sports">
+          <i data-feather="award" class="inline mr-2"></i> Sports
+        </button>
+        <button class="category-btn px-4 py-2 rounded-full bg-sneakerpink text-white font-medium transition-all duration-300 hover:bg-opacity-90" data-category="performance">
+          <i data-feather="star" class="inline mr-2"></i> Performance Sneakers
+        </button>
+        <button class="category-btn px-4 py-2 rounded-full bg-sneakerorange text-white font-medium transition-all duration-300 hover:bg-opacity-90" data-category="running">
+          <i data-feather="activity" class="inline mr-2"></i> Running Shoes
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shoe Categories Sections -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Sports Shoes Section -->
+    <section id="sports" class="category-section mb-20">
+      <h2 class="title-font text-4xl text-textlight mb-8 flex items-center">
+        <i data-feather="award" class="mr-3 text-sneakerblue"></i>
+        Sports Collection
+      </h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Shoe Card 1 -->
+        <div class="shoe-card rounded-xl overflow-hidden shadow-lg transition-all duration-300">
+          <div class="shoe-image-container relative">
+            <img src="https://m.media-amazon.com/images/I/51QbiMp2w4L._AC_SX575_.jpg" alt="Nike Air Zoom" class="shoe-image">
+            <div class="absolute inset-0 bg-black/20"></div>
+            <a href="https://www.amazon.com/Under-Armour-Charged-Surge-Running/dp/B0BZXMXTT2?pd_rd_w=7OJGA&content-id=amzn1.sym.8538b2da-9fd7-4878-9035-0e30ca235e1e&pf_rd_p=8538b2da-9fd7-4878-9035-0e30ca235e1e&pf_rd_r=VWS2PXRJ2JAY8C6KNWYS&pd_rd_wg=2Xb3b&pd_rd_r=5f37e0f5-d7c8-420a-ba20-c923b84c1be9&pd_rd_i=B0BZXMXTT2" target="_blank" class="absolute bottom-4 male-pref-btn px-4 py-2 rounded-lg transition flex items-center">
+              <i data-feather="eye" class="w-4 h-4 mr-1"></i> View
+            </a>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Under Armour Men's Charged Surge 4 Sneaker</h3>
+          </div>
+        </div>
+
+        <!-- Shoe Card 2 -->
+        <div class="shoe-card rounded-xl overflow-hidden shadow-lg transition-all duration-300">
+          <div class="shoe-image-container relative">
+            <img src="https://m.media-amazon.com/images/I/71Y0WmkL5AL._AC_SX575_.jpg" alt="Adidas Superstar" class="shoe-image">
+            <div class="absolute inset-0 bg-black/20"></div>
+            <a href="https://www.amazon.com/ASICS-Gel-Venture-Trail-Running-Midnight/dp/B0D462M9J6/136-5776532-0606368?psc=1" target="_blank" class="absolute bottom-4 male-pref-btn px-4 py-2 rounded-lg transition flex items-center">
+              <i data-feather="eye" class="w-4 h-4 mr-1"></i> View
+            </a>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-gray-800 mb-2">ASICS Men's Gel-Venture 10 Running Shoes</h3>
+          </div>
+        </div>
+
+        <!-- Shoe Card 3 -->
+        <div class="shoe-card rounded-xl overflow-hidden shadow-lg transition-all duration-300">
+          <div class="shoe-image-container relative">
+            <img src="https://m.media-amazon.com/images/I/71-crYIBnjL._AC_SX575_.jpg" alt="New Balance 574" class="shoe-image">
+            <div class="absolute inset-0 bg-black/20"></div>
+            <a href="https://www.amazon.com/adidas-Racer-Adapt-Sneaker-Black/dp/B0CKM9NRVK/136-5776532-0606368?psc=1" target="_blank" class="absolute bottom-4 male-pref-btn px-4 py-2 rounded-lg transition flex items-center">
+              <i data-feather="eye" class="w-4 h-4 mr-1"></i> View
+            </a>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-gray-800 mb-2">adidas Men's Lite Racer Adapt 7.0 Sneaker</h3>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Performance Sneakers Section -->
+    <section id="performance" class="category-section mb-20 hidden">
+      <h2 class="title-font text-4xl text-textlight mb-8 flex items-center">
+        <i data-feather="star" class="mr-3 text-sneakerpink"></i>
+        Performance Sneakers (Pwede pang porma Tito!)
+      </h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Shoe Card 1 -->
+        <div class="shoe-card rounded-xl overflow-hidden shadow-lg transition-all duration-300">
+          <div class="shoe-image-container relative">
+            <img src="https://m.media-amazon.com/images/I/81RZaolzogL._AC_SX575_.jpg" alt="Skechers Energy Afterburn" class="shoe-image">
+            <div class="absolute inset-0 bg-black/20"></div>
+            <a href="https://www.amazon.com/Skechers-Energy-Afterburn-Lace-Up-Sneaker/dp/B000ARG5SY?pd_rd_w=ZJjz3&content-id=amzn1.sym.8538b2da-9fd7-4878-9035-0e30ca235e1e&pf_rd_p=8538b2da-9fd7-4878-9035-0e30ca235e1e&pf_rd_r=9T13137QBK8HP33MDAT3&pd_rd_wg=G7naM&pd_rd_r=ba46856f-488e-4cb2-a19e-7155a1553bc3&pd_rd_i=B000ARG5SY" target="_blank" class="absolute bottom-4 male-pref-btn px-4 py-2 rounded-lg transition flex items-center">
+              <i data-feather="eye" class="w-4 h-4 mr-1"></i> View
+            </a>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Skechers Men's Energy Afterburn Sneakers</h3>
+          </div>
+        </div>
+
+        <!-- Shoe Card 2 -->
+        <div class="shoe-card rounded-xl overflow-hidden shadow-lg transition-all duration-300">
+          <div class="shoe-image-container relative">
+            <img src="https://m.media-amazon.com/images/I/71T7FecOS2L._AC_SY575_.jpg" alt="FitVille Walking Shoes">
+            <div class="absolute inset-0 bg-black/20"></div>
+            <a href="https://www.amazon.com/FitVille-Lightweight-Orthopedic-Cushioned-Anti-Slip/dp/B0FD33ZST7?pd_rd_w=OV7sA&content-id=amzn1.sym.ef6f06ea-36e0-4e0f-9535-627c4ba3aa58&pf_rd_p=ef6f06ea-36e0-4e0f-9535-627c4ba3aa58&pf_rd_r=9T13137QBK8HP33MDAT3&pd_rd_wg=G7naM&pd_rd_r=ba46856f-488e-4cb2-a19e-7155a1553bc3&pd_rd_i=B0FD33ZST7" target="_blank" class="absolute bottom-4 male-pref-btn px-4 py-2 rounded-lg transition flex items-center">
+              <i data-feather="eye" class="w-4 h-4 mr-1"></i> View
+            </a>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-gray-800 mb-2">FitVille Wide Walking Shoes for Men</h3>
+          </div>
+        </div>
+
+        <!-- Shoe Card 3 -->
+        <div class="shoe-card rounded-xl overflow-hidden shadow-lg transition-all duration-300">
+          <div class="shoe-image-container relative">
+            <img src="https://m.media-amazon.com/images/I/71SEXBKc-tL._AC_SY575_.jpg" alt="Nike Dunk Low" class="shoe-image">
+            <div class="absolute inset-0 bg-black/20"></div>
+            <a href="https://www.amazon.com/Running-Breathable-Runners-Sneakers-Athletic/dp/B0FHJLZ92P?pd_rd_w=OV7sA&content-id=amzn1.sym.ef6f06ea-36e0-4e0f-9535-627c4ba3aa58&pf_rd_p=ef6f06ea-36e0-4e0f-9535-627c4ba3aa58&pf_rd_r=9T13137QBK8HP33MDAT3&pd_rd_wg=G7naM&pd_rd_r=ba46856f-488e-4cb2-a19e-7155a1553bc3&pd_rd_i=B0FHJLZ92P&th=1&psc=1" target="_blank" class="absolute bottom-4 male-pref-btn px-4 py-2 rounded-lg transition flex items-center">
+              <i data-feather="eye" class="w-4 h-4 mr-1"></i> View
+            </a>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Men's Running Shoes Breathable</h3>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Running Shoes Section -->
+    <section id="running" class="category-section hidden">
+      <h2 class="title-font text-4xl text-textlight mb-8 flex items-center">
+        <i data-feather="activity" class="mr-3 text-sneakerorange"></i>
+        Running Shoes
+      </h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Shoe Card 1 -->
+        <div class="shoe-card rounded-xl overflow-hidden shadow-lg transition-all duration-300">
+          <div class="shoe-image-container relative">
+            <img src="https://m.media-amazon.com/images/I/71ozLnN9+gL._AC_SX575_.jpg" alt="Nike Pegasus Turbo" class="shoe-image">
+            <div class="absolute inset-0 bg-black/20"></div>
+            <a href="https://www.amazon.com/adidas-Mens-Swift-Sneaker-Black/dp/B0BHPSHTR8/136-5776532-0606368?th=1&psc=1" target="_blank" class="absolute bottom-4 male-pref-btn px-4 py-2 rounded-lg transition flex items-center">
+              <i data-feather="eye" class="w-4 h-4 mr-1"></i> View
+            </a>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-gray-800 mb-2">adidas Men's Swift Run 1.0 Sneaker</h3>
+          </div>
+        </div>
+
+        <!-- Shoe Card 2 -->
+        <div class="shoe-card rounded-xl overflow-hidden shadow-lg transition-all duration-300">
+          <div class="shoe-image-container relative">
+            <img src="https://m.media-amazon.com/images/I/51iGd0a6BDS._AC_SX575_.jpg" alt="Hoka One One" class="shoe-image">
+            <div class="absolute inset-0 bg-black/20"></div>
+            <a href="https://www.amazon.com/adidas-Mens-Swift-Sneaker-Black/dp/B0FH5W5Z4B/136-5776532-0606368?th=1&psc=1" target="_blank" class="absolute bottom-4 male-pref-btn px-4 py-2 rounded-lg transition flex items-center">
+              <i data-feather="eye" class="w-4 h-4 mr-1"></i> View
+            </a>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-gray-800 mb-2">adidas Men's Swift Run 1.0 Sneaker (White)</h3>
+          </div>
+        </div>
+
+        <!-- Shoe Card 3 -->
+        <div class="shoe-card rounded-xl overflow-hidden shadow-lg transition-all duration-300">
+          <div class="shoe-image-container relative">
+            <img src="https://m.media-amazon.com/images/I/619em8dR4hL._AC_SX569_.jpg" alt="Asics Gel-Kayano" class="shoe-image">
+            <div class="absolute inset-0 bg-black/20"></div>
+            <a href="https://www.amazon.com/Nike-Sneaker-Shoes-Photon-Black-White-Wolf/dp/B0BX4F88ZZ/136-5776532-0606368?psc=1" target="_blank" class="absolute bottom-4 male-pref-btn px-4 py-2 rounded-lg transition flex items-center">
+              <i data-feather="eye" class="w-4 h-4 mr-1"></i> View
+            </a>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Nike Men's Run Swift 3 Road Running Shoes</h3>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Testimonial Section -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="testimonial-bg rounded-2xl p-8 md:p-12">
+      <div class="text-center max-w-3xl mx-auto">
+        <i data-feather="message-circle" class="w-16 h-16 text-sneakerblue mx-auto mb-6 opacity-70"></i>
+        <blockquote class="text-xl md:text-2xl text-textlight mb-6 italic">
+          "The perfect shoes can make all the difference - they're not just footwear, they're an extension of your personality and lifestyle."
+        </blockquote>
+        <div class="flex items-center justify-center">
+          <div class="w-12 h-12 bg-sneakerorange rounded-full flex items-center justify-center text-white font-bold text-xl">
+            JB
+          </div>
+          <div class="ml-4">
+            <div class="font-bold text-textlight">Jenny & Bimbo</div>
+            <div class="text-gray-300 text-sm">Our Inspiration</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-textlight py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        
+        </div>
+      </div>
+      <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+        <p>&copy; 2023 SoleMates. All rights reserved. Made with <i data-feather="heart" class="inline w-4 h-4 text-red-400"></i> for Tita Jenny and Tito Bimbo</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Category switching functionality
+    document.querySelectorAll('.category-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.category-section').forEach(section => {
+          section.classList.add('hidden');
+        });
+        const category = this.getAttribute('data-category');
+        document.getElementById(category).classList.remove('hidden');
+
+        document.querySelectorAll('.category-btn').forEach(b => {
+          b.classList.remove('active-category');
+        });
+
+        this.classList.add('active-category');
+      });
+    });
+
+    // Initialize feather icons
+    feather.replace();
+  </script>
+</body>
+</html>
