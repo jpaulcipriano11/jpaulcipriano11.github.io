@@ -418,7 +418,6 @@
         });
         // Feather icons
         feather.replace();
-
         // Send email function
         function sendEmail() {
             const name = document.getElementById('name').value;
@@ -426,15 +425,14 @@
             const message = document.getElementById('message').value;
             
             if(name && email && message) {
-                const subject = `New Message from ${name}`;
+                const subject = `Hi! Let's Work Together`;
                 const body = `Name: ${name}%0D%0AEmail: ${email}%0D%0AMessage: ${message}`;
-                window.location.href = `mailto:jpaulcipriano@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                window.location.href = `https://mail.google.com/mail/?view=cm&fs=1&to=jpaulcipriano@gmail.com&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
             } else {
                 alert('Please fill all fields before sending.');
             }
         }
-
-        // Form submission handler
+// Form submission handler
         document.getElementById('contactForm').addEventListener('submit', function(e) {
             e.preventDefault();
             sendEmail();
