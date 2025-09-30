@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paul's Portfolio | Customer Service & Technical Support</title>
+<link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+            background-color: #f8fafc;
+        }
+        .vanta-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.5;
+        }
+        .nav-link::after {
+            content: '';
+            display: block;
+            width: 0;
+            height: 2px;
+            background: #2563eb;
+            transition: width 0.3s;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        #work .bg-white {
+            border-left: 4px solid #2563eb;
+            transition: all 0.3s ease;
+        }
+        #work .bg-white:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.1);
+        }
+        #skills .skill-card {
+            transition: all 0.3s ease;
+            border: 1px solid #e2e8f0;
+        }
+        #skills .skill-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.1);
+            border-color: #2563eb;
+        }
+        #contact form input,
+        #contact form textarea {
+            transition: all 0.3s ease;
+        }
+        #contact form input:focus,
+        #contact form textarea:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        footer {
+            background-color: #1e293b;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Vanta.js Background -->
+    <div id="vanta-bg" class="vanta-bg"></div>
+
+    <!-- Navbar -->
+    <nav class="fixed w-full bg-white/80 backdrop-blur-sm z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-gray-800">Paul's Portfolio</span>
+</div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="nav-link text-gray-700 hover:text-blue-600 transition">Home</a>
+                    <a href="#work" class="nav-link text-gray-700 hover:text-blue-600 transition">Work</a>
+                    <a href="#about" class="nav-link text-gray-700 hover:text-blue-600 transition">About</a>
+                    <a href="#skills" class="nav-link text-gray-700 hover:text-blue-600 transition">Skills</a>
+                    <a href="#contact" class="nav-link text-gray-700 hover:text-blue-600 transition">Contact</a>
+                </div>
+                <div class="md:hidden flex items-center">
+                    <button id="menu-btn" class="text-gray-600 hover:text-gray-900">
+                        <i data-feather="menu"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden fixed inset-0 bg-white/90 backdrop-blur-lg z-40 flex flex-col justify-center items-center space-y-8">
+        <button id="close-btn" class="absolute top-6 right-6 text-gray-600 hover:text-gray-900">
+            <i data-feather="x"></i>
+        </button>
+        <a href="#home" class="text-2xl font-medium text-gray-800 hover:text-blue-600">Home</a>
+        <a href="#work" class="text-2xl font-medium text-gray-800 hover:text-blue-600">Work</a>
+        <a href="#about" class="text-2xl font-medium text-gray-800 hover:text-blue-600">About</a>
+        <a href="#skills" class="text-2xl font-medium text-gray-800 hover:text-blue-600">Skills</a>
+        <a href="#contact" class="text-2xl font-medium text-gray-800 hover:text-blue-600">Contact</a>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center justify-center pt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+            <div class="text-center">
+                <h1 class="text-5xl md:text-7xl font-bold text-gray-900 mb-6">
+                    <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">Hi, I'm Paul</span>
+</h1>
+                <h2 class="text-2xl md:text-3xl font-semibold text-gray-700 mb-8">
+                    Customer Service Representative & Technical Support
+                </h2>
+<p class="max-w-2xl mx-auto text-lg text-gray-600 mb-10">
+                    Providing exceptional customer service and technical support with a focus on problem-solving and client satisfaction.
+</p>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <a href="#work" class="px-8 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition shadow-lg hover:shadow-xl">
+                        View My Work
+                    </a>
+                    <a href="#contact" class="px-8 py-3 bg-white text-blue-600 font-medium rounded-lg border border-blue-600 hover:bg-blue-50 transition shadow-lg hover:shadow-xl">
+                        Contact Me
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Work Experience Section -->
+    <section id="work" class="py-20 bg-white/80 backdrop-blur-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">Work Experience</h2>
+                <p class="max-w-2xl mx-auto text-lg text-gray-600">
+                    My professional journey in customer service and technical support
+                </p>
+            </div>
+
+            <div class="space-y-8">
+                <!-- Experience 1 -->
+                <div class="bg-white rounded-xl p-8 shadow-lg">
+                    <div class="flex flex-col md:flex-row md:items-center">
+                        <div class="md:w-1/4 mb-4 md:mb-0">
+                            <h3 class="text-xl font-bold text-gray-900">KCTV</h3>
+</div>
+                        <div class="md:w-3/4">
+                            <h4 class="text-lg font-semibold text-gray-800">Customer Service Representative</h4>
+                            <p class="text-gray-600 mt-2">
+                                - Handled customer inquiries and complaints via phone and email<br>
+                                - Resolved billing issues and service interruptions<br>
+                                - Managed customer accounts and service upgrades<br>
+                                - Maintained 95%+ customer satisfaction rating
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Experience 2 -->
+                <div class="bg-white rounded-xl p-8 shadow-lg">
+                    <div class="flex flex-col md:flex-row md:items-center">
+                        <div class="md:w-1/4 mb-4 md:mb-0">
+                            <h3 class="text-xl font-bold text-gray-900">AT&T / DirecTV</h3>
+</div>
+                        <div class="md:w-3/4">
+                            <h4 class="text-lg font-semibold text-gray-800">Customer Service Representative</h4>
+                            <p class="text-gray-600 mt-2">
+                                - Assisted customers with TV, internet and phone services<br>
+                                - Troubleshot technical issues with satellite receivers<br>
+                                - Processed orders and scheduled technician visits<br>
+                                - Consistently exceeded performance metrics
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Experience 3 -->
+                <div class="bg-white rounded-xl p-8 shadow-lg">
+                    <div class="flex flex-col md:flex-row md:items-center">
+                        <div class="md:w-1/4 mb-4 md:mb-0">
+                            <h3 class="text-xl font-bold text-gray-900">Samsung</h3>
+</div>
+                        <div class="md:w-3/4">
+                            <h4 class="text-lg font-semibold text-gray-800">Mobile Devices Technical Support</h4>
+                            <p class="text-gray-600 mt-2">
+                                - Provided technical support for smartphones and tablets<br>
+                                - Diagnosed hardware and software issues<br>
+                                - Guided customers through troubleshooting steps<br>
+                                - Documented and escalated unresolved issues
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Experience 4 -->
+                <div class="bg-white rounded-xl p-8 shadow-lg">
+                    <div class="flex flex-col md:flex-row md:items-center">
+                        <div class="md:w-1/4 mb-4 md:mb-0">
+                            <h3 class="text-xl font-bold text-gray-900">Freelance</h3>
+</div>
+                        <div class="md:w-3/4">
+                            <h4 class="text-lg font-semibold text-gray-800">Web Design & Development</h4>
+                            <p class="text-gray-600 mt-2">
+                                - Designed and developed responsive websites<br>
+                                - Provided technical support for web applications<br>
+                                - Managed client communication and requirements<br>
+                                - Implemented SEO and performance optimization
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+</div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-gradient-to-br from-blue-50 to-purple-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/3 mb-10 md:mb-0 flex justify-center">
+                    <div class="relative rounded-full overflow-hidden shadow-2xl w-64 h-64 border-4 border-white">
+                    <img src="https://huggingface.co/spaces/jpaulcipriano11/pixelperfect-portfolio-pro/resolve/main/images/Resume%20Picture.png" alt="Paul" class="w-full h-full object-cover">
+</div>
+                </div>
+                <div class="md:w-2/3 md:pl-12">
+                    <h2 class="text-4xl font-bold text-gray-900 mb-6">About Me</h2>
+                    <p class="text-lg text-gray-700 mb-6">
+                    I'm a dedicated Customer Service and Technical Support professional with over 12 years of experience helping customers resolve issues and improve their experience. My background includes technical support for mobile devices and web development.
+                    </p>
+                    <p class="text-lg text-gray-700 mb-8">
+                        I specialize in troubleshooting complex issues, explaining technical concepts clearly, and providing exceptional service. My approach combines technical knowledge with strong interpersonal skills to deliver solutions that satisfy customers.
+</p>
+</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-20 bg-white/90 backdrop-blur-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">Skills & Expertise</h2>
+                <p class="max-w-2xl mx-auto text-lg text-gray-600">
+                    The tools and technologies I use to bring ideas to life
+                </p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
+                <!-- Skill 1 -->
+                <div class="skill-card bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition flex flex-col items-center">
+                    <div class="w-16 h-16 mb-4 flex items-center justify-center">
+                        <i data-feather="headphones" class="text-blue-600 w-10 h-10"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Customer Service</h3>
+                    <p class="text-gray-600 text-center">Conflict resolution, Active listening, Empathy, Problem-solving</p>
+                </div>
+
+                <!-- Skill 2 -->
+                <div class="skill-card bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition flex flex-col items-center">
+                    <div class="w-16 h-16 mb-4 flex items-center justify-center">
+                        <i data-feather="tool" class="text-purple-600 w-10 h-10"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Technical Support</h3>
+                    <p class="text-gray-600 text-center">Troubleshooting, Diagnostics, Hardware/Software support, Remote assistance</p>
+                </div>
+
+                <!-- Skill 3 -->
+                <div class="skill-card bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition flex flex-col items-center">
+                    <div class="w-16 h-16 mb-4 flex items-center justify-center">
+                        <i data-feather="phone" class="text-green-600 w-10 h-10"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Call Center</h3>
+                    <p class="text-gray-600 text-center">CRM systems, Call handling, Quality assurance, Performance metrics</p>
+                </div>
+
+                <!-- Skill 4 -->
+                <div class="skill-card bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition flex flex-col items-center">
+                    <div class="w-16 h-16 mb-4 flex items-center justify-center">
+                        <i data-feather="monitor" class="text-yellow-600 w-10 h-10"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Web Development</h3>
+                    <p class="text-gray-600 text-center">HTML, CSS, JavaScript, WordPress, Technical troubleshooting</p>
+                </div>
+
+                <!-- Skill 5 -->
+                <div class="skill-card bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition flex flex-col items-center">
+                    <div class="w-16 h-16 mb-4 flex items-center justify-center">
+                        <i data-feather="users" class="text-red-600 w-10 h-10"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Communication</h3>
+                    <p class="text-gray-600 text-center">Clear explanations, Documentation, Training, Multilingual support</p>
+                </div>
+</div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-gray-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4">Let's Work Together</h2>
+                <p class="max-w-2xl mx-auto text-lg text-gray-300">
+                    Have a project in mind or want to discuss potential opportunities? Get in touch!
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div>
+                    <form class="space-y-6">
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-gray-300 mb-1">Your Name</label>
+                            <input type="text" id="name" class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white placeholder-gray-400">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-300 mb-1">Email Address</label>
+                            <input type="email" id="email" class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white placeholder-gray-400">
+                        </div>
+                        <div>
+                            <label for="message" class="block text-sm font-medium text-gray-300 mb-1">Your Message</label>
+                            <textarea id="message" rows="5" class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white placeholder-gray-400"></textarea>
+                        </div>
+                        <button type="submit" class="w-full px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition shadow-lg hover:shadow-xl">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+                <div class="space-y-8">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 mt-1">
+                            <i data-feather="mail" class="text-blue-400 w-6 h-6"></i>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-medium text-white mb-1">Email</h3>
+                            <p class="text-gray-400">jpaulcipriano@gmail.com</p>
+</div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 mt-1">
+                            <i data-feather="phone" class="text-blue-400 w-6 h-6"></i>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-medium text-white mb-1">Phone</h3>
+                            <p class="text-gray-400">+63 966 059 3695</p>
+</div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 mt-1">
+                            <i data-feather="map-pin" class="text-blue-400 w-6 h-6"></i>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-medium text-white mb-1">Location</h3>
+                            <p class="text-gray-400">Numancia, PH</p>
+</div>
+                    </div>
+</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                <span class="text-xl font-bold text-white">Paul's Portfolio</span>
+<p class="text-gray-400 mt-1">© 2023 Paul. All rights reserved</p>
+</div>
+                <div class="flex space-x-6">
+                    <a href="#home" class="text-gray-400 hover:text-white transition">Home</a>
+                    <a href="#work" class="text-gray-400 hover:text-white transition">Work</a>
+                    <a href="#about" class="text-gray-400 hover:text-white transition">About</a>
+                    <a href="#skills" class="text-gray-400 hover:text-white transition">Skills</a>
+                    <a href="#contact" class="text-gray-400 hover:text-white transition">Contact</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Initialize Vanta.js with updated settings
+        VANTA.NET({
+            el: "#vanta-bg",
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.00,
+            minWidth: 200.00,
+            scale: 1.00,
+            scaleMobile: 1.00,
+            color: 0x2563eb,
+            backgroundColor: 0xf8fafc,
+            points: 10.00,
+            maxDistance: 18.00,
+            spacing: 13.00
+        });
+// Mobile menu toggle
+        document.getElementById('menu-btn').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.remove('hidden');
+        });
+
+        document.getElementById('close-btn').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.add('hidden');
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+                // Close mobile menu if open
+                document.getElementById('mobile-menu').classList.add('hidden');
+            });
+        });
+
+        // Feather icons
+        feather.replace();
+    </script>
+</body>
+</html>
