@@ -420,18 +420,29 @@
         feather.replace();
         // Send email function
         function sendEmail() {
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const message = document.getElementById('message').value;
-            
-            if(name && email && message) {
-                const subject = `Hi! Let's Work Together`;
-                const body = `Name: ${name}%0D%0AEmail: ${email}%0D%0AMessage: ${message}`;
-                window.location.href = `https://mail.google.com/mail/?view=cm&fs=1&to=jpaulcipriano@gmail.com&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-            } else {
-                alert('Please fill all fields before sending.');
-            }
-        }
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const message = document.getElementById('message').value;
+    
+    if (name && email && message) {
+        const subject = "Hi! Let's Work Together";
+
+        // Build HTML body with bold labels
+        const body = 
+            "<b>Name:</b> " + encodeURIComponent(name) + "%0D%0A" +
+            "<b>Email:</b> " + encodeURIComponent(email) + "%0D%0A" +
+            "<b>Message:</b> " + encodeURIComponent(message);
+
+        window.location.href = 
+            "https://mail.google.com/mail/?view=cm&fs=1" +
+            "&to=jpaulcipriano@gmail.com" +
+            "&su=" + encodeURIComponent(subject) +
+            "&body=" + body;
+    } else {
+        alert('Please fill all fields before sending.');
+    }
+}
+
 // Form submission handler
         document.getElementById('contactForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -440,3 +451,4 @@
     </script>
 </body>
 </html>
+
