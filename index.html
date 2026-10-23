@@ -137,10 +137,11 @@
             <h2 class="section-title fade-in">Let's <span class="gradient-text">Work Together</span></h2>
             <p class="section-subtitle fade-in">Have a project in mind or want to discuss potential opportunities? Get in touch!</p>
             <div class="contact-wrapper">
-               <form class="contact-form glass-card fade-in" id="contactForm">
-    <input type="text" id="contactName" placeholder="Your Name" required>
-    <input type="email" id="contactEmail" placeholder="Email Address" required>
-    <textarea id="contactMessage" placeholder="Your Message" rows="5" required></textarea>
+  <form class="contact-form glass-card fade-in" id="contactForm">
+    <!-- Notice the name="user_name", name="user_email", and name="message" -->
+    <input type="text" name="user_name" placeholder="Your Name" required>
+    <input type="email" name="user_email" placeholder="Email Address" required>
+    <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
     <button type="submit" class="btn btn-primary">Send Message <i class="fas fa-paper-plane"></i></button>
 </form>
                 <div class="contact-info fade-in">
