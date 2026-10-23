@@ -28,7 +28,6 @@ function type() {
     const currentText = textArray[textArrayIndex];
     if (isDeleting) { typedTextElement.textContent = currentText.substring(0, charIndex - 1); charIndex--; } 
     else { typedTextElement.textContent = currentText.substring(0, charIndex + 1); charIndex++; }
-    
     let typeSpeed = 100;
     if (isDeleting) typeSpeed /= 2;
     if (!isDeleting && charIndex === currentText.length) { typeSpeed = 2000; isDeleting = true; } 
@@ -38,27 +37,18 @@ function type() {
 
 const cursorGlow = document.getElementById('cursorGlow');
 if (window.matchMedia("(pointer: fine)").matches) {
-    document.addEventListener('mousemove', (e) => { 
-        cursorGlow.style.left = e.clientX + 'px'; 
-        cursorGlow.style.top = e.clientY + 'px'; 
-    });
+    document.addEventListener('mousemove', (e) => { cursorGlow.style.left = e.clientX + 'px'; cursorGlow.style.top = e.clientY + 'px'; });
 }
 
 const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry, index) => { 
-        if (entry.isIntersecting) { 
-            setTimeout(() => { entry.target.classList.add('visible'); }, index * 100); 
-        } 
-    });
+    entries.forEach((entry, index) => { if (entry.isIntersecting) { setTimeout(() => { entry.target.classList.add('visible'); }, index * 100); } });
 }, { threshold: 0.1 });
 document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
 const menuToggle = document.getElementById('menuToggle');
 const navLinks = document.getElementById('navLinks');
 menuToggle.addEventListener('click', () => { navLinks.classList.toggle('active'); });
-document.querySelectorAll('.nav-links a').forEach(link => { 
-    link.addEventListener('click', () => { navLinks.classList.remove('active'); }); 
-});
+document.querySelectorAll('.nav-links a').forEach(link => { link.addEventListener('click', () => { navLinks.classList.remove('active'); }); });
 
 // ==========================================
 // 4. ADMIN PANEL LOGIC
@@ -103,14 +93,12 @@ const uploadStatus = document.getElementById('uploadStatus');
 
 function loadProjects() {
     projectsGrid.innerHTML = '<p style="text-align:center; grid-column: 1/-1; color: var(--text-secondary);">Loading projects from cloud...</p>';
-    
     db.collection("projects").orderBy("timestamp", "desc").get().then((querySnapshot) => {
         projectsGrid.innerHTML = '';
         if (querySnapshot.empty) {
             projectsGrid.innerHTML = '<p style="text-align:center; grid-column: 1/-1; color: var(--text-secondary);">No projects added yet. Use the Admin panel to add some!</p>';
             return;
         }
-
         querySnapshot.forEach((doc) => {
             const proj = doc.data();
             const images = proj.images || [];
@@ -127,10 +115,8 @@ function loadProjects() {
                 imagesHtml += `</div>`;
             }
 
-            // Description logic: starts truncated, button toggles it
             let descHtml = `<p class="project-desc truncated" id="desc-${doc.id}">${proj.desc}</p>`;
             let btnHtml = '';
-            
             if (proj.desc && proj.desc.length > 120) {
                 btnHtml = `<button class="read-more-btn" onclick="toggleDesc(this, 'desc-${doc.id}')">Read more</button>`;
             }
@@ -205,14 +191,11 @@ saveProjBtn.addEventListener('click', async () => {
 
     saveProjBtn.textContent = 'Processing...';
     saveProjBtn.disabled = true;
-
     let imageUrls = [];
 
     if (editDocId && files.length === 0) {
         const doc = await db.collection("projects").doc(editDocId).get();
-        if (doc.exists) {
-            imageUrls = doc.data().images || [];
-        }
+        if (doc.exists) { imageUrls = doc.data().images || []; }
     }
 
     if (files.length > 0) {
@@ -223,16 +206,10 @@ saveProjBtn.addEventListener('click', async () => {
             const formData = new FormData();
             formData.append('image', file);
             try {
-                const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
-                    method: 'POST',
-                    body: formData
-                });
+                const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: 'POST', body: formData });
                 const data = await response.json();
-                if (data.success) {
-                    imageUrls.push(data.data.url);
-                } else {
-                    throw new Error(data.error ? data.error.message : 'Upload failed');
-                }
+                if (data.success) { imageUrls.push(data.data.url); } 
+                else { throw new Error(data.error ? data.error.message : 'Upload failed'); }
             } catch (error) {
                 alert(`Image upload failed for ${file.name}: ${error.message}`);
                 saveProjBtn.textContent = editDocId ? 'Update Project' : 'Add Project';
@@ -252,28 +229,20 @@ saveProjBtn.addEventListener('click', async () => {
         return;
     }
 
-    const projectData = { 
-        title, 
-        images: imageUrls,
-        desc, 
-        timestamp: firebase.firestore.FieldValue.serverTimestamp() 
-    };
-
+    const projectData = { title, images: imageUrls, desc, timestamp: firebase.firestore.FieldValue.serverTimestamp() };
     uploadStatus.textContent = 'Saving to database...';
 
     if (editDocId) {
         db.collection("projects").doc(editDocId).update(projectData).then(() => {
             alert('Project updated successfully!');
             cancelEditBtn.click();
-            loadProjects();
-            loadAdminProjects();
+            loadProjects(); loadAdminProjects();
         }).catch((error) => { alert('Error updating: ' + error.message); });
     } else {
         db.collection("projects").add(projectData).then(() => {
             alert('Project added successfully!');
             projTitle.value = ''; projImageFile.value = ''; projDesc.value = '';
-            loadProjects();
-            loadAdminProjects();
+            loadProjects(); loadAdminProjects();
         }).catch((error) => { alert('Error adding: ' + error.message); });
     }
     
@@ -288,8 +257,7 @@ window.deleteProject = function(docId) {
     if (confirm('Are you sure you want to delete this project from the cloud?')) {
         db.collection("projects").doc(docId).delete().then(() => {
             if (editDocId === docId) { cancelEditBtn.click(); }
-            loadProjects();
-            loadAdminProjects();
+            loadProjects(); loadAdminProjects();
         }).catch((error) => { alert('Error deleting: ' + error.message); });
     }
 }
@@ -302,26 +270,14 @@ const lightboxImg = document.getElementById('lightboxImg');
 const closeLightbox = document.getElementById('closeLightbox');
 
 window.openLightbox = function(src) {
-    if (lightbox && lightboxImg) { 
-        lightboxImg.src = src; 
-        lightbox.style.display = 'flex'; 
-        document.body.style.overflow = 'hidden'; 
-    }
+    if (lightbox && lightboxImg) { lightboxImg.src = src; lightbox.style.display = 'flex'; document.body.style.overflow = 'hidden'; }
 }
 function closeLightboxFunc() {
-    if (lightbox) { 
-        lightbox.style.display = 'none'; 
-        if (lightboxImg) lightboxImg.src = ''; 
-        document.body.style.overflow = ''; 
-    }
+    if (lightbox) { lightbox.style.display = 'none'; if (lightboxImg) lightboxImg.src = ''; document.body.style.overflow = ''; }
 }
 if (closeLightbox) { closeLightbox.addEventListener('click', closeLightboxFunc); }
-if (lightbox) { 
-    lightbox.addEventListener('click', (e) => { if (e.target === lightbox) { closeLightboxFunc(); } }); 
-}
-document.addEventListener('keydown', (e) => { 
-    if (e.key === 'Escape' && lightbox && lightbox.style.display === 'flex') { closeLightboxFunc(); } 
-});
+if (lightbox) { lightbox.addEventListener('click', (e) => { if (e.target === lightbox) { closeLightboxFunc(); } }); }
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && lightbox && lightbox.style.display === 'flex') { closeLightboxFunc(); } });
 
 // ==========================================
 // 7. INITIAL LOAD & CONTACT FORM (EMAILJS)
@@ -334,20 +290,19 @@ document.getElementById('contactForm').addEventListener('submit', function(event
     const btn = this.querySelector('button');
     const originalText = btn.innerHTML;
     
-    // Change button to loading state
     btn.innerHTML = 'Sending... <i class="fas fa-spinner fa-spin"></i>';
     btn.disabled = true;
 
-    // ⚠️ REPLACE WITH YOUR ACTUAL EMAILJS SERVICE ID AND TEMPLATE ID
-    const serviceID = 'YOUR_SERVICE_ID';
-    const templateID = 'YOUR_TEMPLATE_ID';
+    // ⚠️ REPLACE THESE WITH YOUR ACTUAL EMAILJS IDs FROM THE DASHBOARD
+    const serviceID = 'service_wxmu6km'; 
+    const templateID = 'template_s5wn5qc'; 
 
     emailjs.sendForm(serviceID, templateID, this)
         .then(() => {
             btn.innerHTML = originalText;
             btn.disabled = false;
             alert('Message sent successfully! I will get back to you soon.');
-            this.reset(); // Clear the form
+            this.reset();
         }, (err) => {
             btn.innerHTML = originalText;
             btn.disabled = false;

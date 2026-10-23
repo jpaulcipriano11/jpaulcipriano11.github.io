@@ -12,15 +12,9 @@
 </head>
 <body>
 
-    <!-- Background Orbs -->
-    <div class="bg-orbs">
-        <div class="orb orb-1"></div>
-        <div class="orb orb-2"></div>
-        <div class="orb orb-3"></div>
-    </div>
+    <div class="bg-orbs"><div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div></div>
     <div class="cursor-glow" id="cursorGlow"></div>
 
-    <!-- Navigation -->
     <nav class="navbar">
         <div class="container nav-container">
             <a href="#home" class="logo">Paul<span class="gradient-text">.</span></a>
@@ -36,7 +30,6 @@
         </div>
     </nav>
 
-    <!-- Home Section -->
     <section id="home" class="hero">
         <div class="container hero-content">
             <div class="hero-text fade-in">
@@ -56,7 +49,6 @@
         </div>
     </section>
 
-    <!-- Work Experience Section -->
     <section id="work" class="section">
         <div class="container">
             <h2 class="section-title fade-in">Work <span class="gradient-text">Experience</span></h2>
@@ -94,7 +86,6 @@
         </div>
     </section>
 
-    <!-- Projects Section -->
     <section id="projects" class="section bg-dark">
         <div class="container">
             <h2 class="section-title fade-in">My <span class="gradient-text">Projects</span></h2>
@@ -105,7 +96,6 @@
         </div>
     </section>
 
-    <!-- About Section -->
     <section id="about" class="section">
         <div class="container about-content">
             <div class="about-text fade-in">
@@ -116,7 +106,6 @@
         </div>
     </section>
 
-    <!-- Skills Section -->
     <section id="skills" class="section bg-dark">
         <div class="container">
             <h2 class="section-title fade-in">Skills & <span class="gradient-text">Expertise</span></h2>
@@ -131,19 +120,18 @@
         </div>
     </section>
 
-    <!-- Contact Section -->
     <section id="contact" class="section">
         <div class="container">
             <h2 class="section-title fade-in">Let's <span class="gradient-text">Work Together</span></h2>
             <p class="section-subtitle fade-in">Have a project in mind or want to discuss potential opportunities? Get in touch!</p>
             <div class="contact-wrapper">
-  <form class="contact-form glass-card fade-in" id="contactForm">
-    <!-- Notice the name="user_name", name="user_email", and name="message" -->
-    <input type="text" name="user_name" placeholder="Your Name" required>
-    <input type="email" name="user_email" placeholder="Email Address" required>
-    <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
-    <button type="submit" class="btn btn-primary">Send Message <i class="fas fa-paper-plane"></i></button>
-</form>
+                <!-- FIXED FORM WITH NAME ATTRIBUTES FOR EMAILJS -->
+                <form class="contact-form glass-card fade-in" id="contactForm">
+                    <input type="text" name="user_name" placeholder="Your Name" required>
+                    <input type="email" name="user_email" placeholder="Email Address" required>
+                    <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
+                    <button type="submit" class="btn btn-primary">Send Message <i class="fas fa-paper-plane"></i></button>
+                </form>
                 <div class="contact-info fade-in">
                     <div class="info-item glass-card"><i class="fas fa-envelope"></i><div><h4>Email</h4><p>jpaulcipriano@gmail.com</p></div></div>
                     <div class="info-item glass-card"><i class="fas fa-phone"></i><div><h4>Phone</h4><p>+63 966 059 3695</p></div></div>
@@ -153,7 +141,6 @@
         </div>
     </section>
 
-    <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <p>&copy; 2023 Paul. All rights reserved.</p>
@@ -161,64 +148,53 @@
         </div>
     </footer>
 
-    <!-- Admin Panel Modal -->
     <div id="adminModal" class="modal">
         <div class="modal-content glass-card">
             <span class="close-btn" id="closeAdmin">&times;</span>
             <h2>Admin <span class="gradient-text">Settings</span></h2>
-            
             <div id="adminLogin">
                 <p>Enter admin password to manage projects:</p>
                 <input type="password" id="adminPass" placeholder="Password">
                 <button class="btn btn-primary" id="loginBtn">Login</button>
                 <p class="hint">Hint: Default password is <code>paul2023</code></p>
             </div>
-
             <div id="adminDashboard" style="display:none;">
                 <h3 id="formTitle">Add New Project</h3>
                 <input type="text" id="projTitle" placeholder="Project Title">
-                
                 <label style="display:block; margin: 15px 0 5px; color: var(--text-secondary); font-size: 0.9rem;">Upload Project Image(s):</label>
                 <input type="file" id="projImageFile" accept="image/*" multiple style="padding: 10px; background: rgba(255,255,255,0.05); border: 1px dashed var(--glass-border); border-radius: 10px; color: white; cursor: pointer; width: 100%;">
                 <p id="uploadStatus" style="font-size: 0.85rem; color: var(--accent-1); margin-top: 5px; display: none;">Uploading image...</p>
-                
                 <textarea id="projDesc" placeholder="Project Description" style="margin-top: 10px;"></textarea>
-                
                 <div style="display: flex; gap: 10px; margin-top: 10px;">
                     <button class="btn btn-primary" id="saveProjBtn">Add Project</button>
                     <button class="btn btn-secondary" id="cancelEditBtn" style="display:none;">Cancel</button>
                 </div>
-                
                 <h3 style="margin-top: 30px;">Manage Projects</h3>
                 <ul id="adminProjList"></ul>
             </div>
         </div>
     </div>
 
-    <!-- Lightbox Modal -->
     <div id="lightbox" class="lightbox">
         <span class="close-btn" id="closeLightbox">&times;</span>
         <img id="lightboxImg" src="" alt="Full size view">
     </div>
 
-    <!-- FIREBASE SDKs -->
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript">
+       (function(){
+          // ⚠️ REPLACE THIS WITH YOUR ACTUAL EMAILJS PUBLIC KEY
+          emailjs.init({
+            publicKey: "7CkZhPkESGq-gODgG", 
+          });
+       })();
+    </script>
+    
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     
-    <!-- EmailJS SDK -->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script type="text/javascript">
-   (function(){
-      // ⚠️ REPLACE THIS WITH YOUR ACTUAL EMAILJS PUBLIC KEY
-      emailjs.init({
-        publicKey: "7CkZhPkESGq-gODgG",
-      });
-   })();
-</script>
-
-<script src="script.js"></script>
-</body>
-
     <script src="script.js"></script>
 </body>
 </html>
