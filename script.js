@@ -28,6 +28,7 @@ function type() {
     const currentText = textArray[textArrayIndex];
     if (isDeleting) { typedTextElement.textContent = currentText.substring(0, charIndex - 1); charIndex--; } 
     else { typedTextElement.textContent = currentText.substring(0, charIndex + 1); charIndex++; }
+    
     let typeSpeed = 100;
     if (isDeleting) typeSpeed /= 2;
     if (!isDeleting && charIndex === currentText.length) { typeSpeed = 2000; isDeleting = true; } 
@@ -37,18 +38,27 @@ function type() {
 
 const cursorGlow = document.getElementById('cursorGlow');
 if (window.matchMedia("(pointer: fine)").matches) {
-    document.addEventListener('mousemove', (e) => { cursorGlow.style.left = e.clientX + 'px'; cursorGlow.style.top = e.clientY + 'px'; });
+    document.addEventListener('mousemove', (e) => { 
+        cursorGlow.style.left = e.clientX + 'px'; 
+        cursorGlow.style.top = e.clientY + 'px'; 
+    });
 }
 
 const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry, index) => { if (entry.isIntersecting) { setTimeout(() => { entry.target.classList.add('visible'); }, index * 100); } });
+    entries.forEach((entry, index) => { 
+        if (entry.isIntersecting) { 
+            setTimeout(() => { entry.target.classList.add('visible'); }, index * 100); 
+        } 
+    });
 }, { threshold: 0.1 });
 document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
 const menuToggle = document.getElementById('menuToggle');
 const navLinks = document.getElementById('navLinks');
 menuToggle.addEventListener('click', () => { navLinks.classList.toggle('active'); });
-document.querySelectorAll('.nav-links a').forEach(link => { link.addEventListener('click', () => { navLinks.classList.remove('active'); }); });
+document.querySelectorAll('.nav-links a').forEach(link => { 
+    link.addEventListener('click', () => { navLinks.classList.remove('active'); }); 
+});
 
 // ==========================================
 // 4. ADMIN PANEL LOGIC
@@ -117,12 +127,12 @@ function loadProjects() {
                 imagesHtml += `</div>`;
             }
 
-            // CSS handles truncation by default. We only add 'expanded' class when clicked.
-            let descHtml = `<p class="project-desc" id="desc-${doc.id}">${proj.desc}</p>`;
+            // Description logic: starts truncated, button toggles it
+            let descHtml = `<p class="project-desc truncated" id="desc-${doc.id}">${proj.desc}</p>`;
             let btnHtml = '';
             
-            if (proj.desc && proj.desc.length > 100) {
-                btnHtml = `<button class="read-more-btn" onclick="toggleDesc(this, 'desc-${doc.id}')">View more</button>`;
+            if (proj.desc && proj.desc.length > 120) {
+                btnHtml = `<button class="read-more-btn" onclick="toggleDesc(this, 'desc-${doc.id}')">Read more</button>`;
             }
 
             card.innerHTML = `${imagesHtml}<h3>${proj.title}</h3>${descHtml}${btnHtml}`;
@@ -136,12 +146,12 @@ function loadProjects() {
 
 window.toggleDesc = function(btn, descId) {
     const descElement = document.getElementById(descId);
-    if (descElement.classList.contains('expanded')) {
-        descElement.classList.remove('expanded');
-        btn.textContent = 'View more';
+    if (descElement.classList.contains('truncated')) {
+        descElement.classList.remove('truncated');
+        btn.textContent = 'Read less';
     } else {
-        descElement.classList.add('expanded');
-        btn.textContent = 'View less';
+        descElement.classList.add('truncated');
+        btn.textContent = 'Read more';
     }
 };
 
@@ -292,17 +302,29 @@ const lightboxImg = document.getElementById('lightboxImg');
 const closeLightbox = document.getElementById('closeLightbox');
 
 window.openLightbox = function(src) {
-    if (lightbox && lightboxImg) { lightboxImg.src = src; lightbox.style.display = 'flex'; document.body.style.overflow = 'hidden'; }
+    if (lightbox && lightboxImg) { 
+        lightboxImg.src = src; 
+        lightbox.style.display = 'flex'; 
+        document.body.style.overflow = 'hidden'; 
+    }
 }
 function closeLightboxFunc() {
-    if (lightbox) { lightbox.style.display = 'none'; if (lightboxImg) lightboxImg.src = ''; document.body.style.overflow = ''; }
+    if (lightbox) { 
+        lightbox.style.display = 'none'; 
+        if (lightboxImg) lightboxImg.src = ''; 
+        document.body.style.overflow = ''; 
+    }
 }
 if (closeLightbox) { closeLightbox.addEventListener('click', closeLightboxFunc); }
-if (lightbox) { lightbox.addEventListener('click', (e) => { if (e.target === lightbox) { closeLightboxFunc(); } }); }
-document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && lightbox && lightbox.style.display === 'flex') { closeLightboxFunc(); } });
+if (lightbox) { 
+    lightbox.addEventListener('click', (e) => { if (e.target === lightbox) { closeLightboxFunc(); } }); 
+}
+document.addEventListener('keydown', (e) => { 
+    if (e.key === 'Escape' && lightbox && lightbox.style.display === 'flex') { closeLightboxFunc(); } 
+});
 
 // ==========================================
-// 7. INITIAL LOAD & CONTACT FORM
+// 7. INITIAL LOAD & CONTACT FORM (EMAILJS)
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => { loadProjects(); type(); });
 
@@ -316,9 +338,9 @@ document.getElementById('contactForm').addEventListener('submit', function(event
     btn.innerHTML = 'Sending... <i class="fas fa-spinner fa-spin"></i>';
     btn.disabled = true;
 
-    // ⚠️ REPLACE WITH YOUR ACTUAL SERVICE ID AND TEMPLATE ID
-    const serviceID = 'service_wxmu6km';
-    const templateID = 'template_s5wn5qc';
+    // ⚠️ REPLACE WITH YOUR ACTUAL EMAILJS SERVICE ID AND TEMPLATE ID
+    const serviceID = 'YOUR_SERVICE_ID';
+    const templateID = 'YOUR_TEMPLATE_ID';
 
     emailjs.sendForm(serviceID, templateID, this)
         .then(() => {
