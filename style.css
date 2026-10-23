@@ -47,13 +47,13 @@ h1, h2, h3, h4 {
     background-color: var(--bg-secondary);
 }
 
-/* === Background Orbs & Cursor Glow === */
+/* === Background Orbs & Cursor Glow (Fixed to never block clicks) === */
 .bg-orbs {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
     z-index: -1;
     overflow: hidden;
-    pointer-events: none;
+    pointer-events: none !important;
 }
 
 .orb {
@@ -80,7 +80,7 @@ h1, h2, h3, h4 {
     height: 300px;
     border-radius: 50%;
     background: radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, transparent 70%);
-    pointer-events: none;
+    pointer-events: none !important;
     z-index: 0;
     transform: translate(-50%, -50%);
     transition: opacity 0.3s;
@@ -164,6 +164,7 @@ body:hover .cursor-glow {
     cursor: pointer;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 10px;
     position: relative;
     overflow: hidden;
@@ -454,7 +455,7 @@ body:hover .cursor-glow {
     color: var(--accent-1);
 }
 
-/* === Projects Grid === */
+/* === Projects Grid & Styling === */
 .projects-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -463,25 +464,50 @@ body:hover .cursor-glow {
 
 .project-card {
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
-.project-card img {
+.project-images-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.project-images-grid.single-image {
+    grid-template-columns: 1fr;
+}
+
+.project-thumb {
     width: 100%;
-    height: 220px;
+    height: 100px;
     object-fit: cover;
     border-radius: 12px;
-    margin-bottom: 20px;
-    transition: transform 0.5s;
+    cursor: pointer;
+    transition: all 0.3s ease;
     border: 1px solid var(--glass-border);
 }
 
-.project-card:hover img {
-    transform: scale(1.05);
+.project-images-grid.single-image .project-thumb {
+    height: 220px;
+}
+
+.project-thumb:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.4);
+    border-color: var(--accent-1);
 }
 
 .project-card h3 {
     margin-bottom: 10px;
     font-size: 1.3rem;
+}
+
+.project-card p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    flex-grow: 1;
 }
 
 /* === Skills Grid === */
@@ -594,11 +620,11 @@ body:hover .cursor-glow {
     margin-top: 10px;
 }
 
-/* === Modal (Admin Panel) === */
-.modal {
+/* === Modals (Admin & Lightbox) - FIXED Z-INDEX === */
+.modal, .lightbox {
     display: none;
     position: fixed;
-    z-index: 2000;
+    z-index: 9999; /* Guaranteed to be on top */
     left: 0;
     top: 0;
     width: 100%;
@@ -608,6 +634,8 @@ body:hover .cursor-glow {
 }
 
 .modal-content {
+    z-index: 10000;
+    position: relative;
     background-color: var(--bg-secondary);
     margin: 5% auto;
     padding: 40px;
@@ -615,9 +643,9 @@ body:hover .cursor-glow {
     width: 90%;
     max-width: 600px;
     border-radius: 24px;
-    position: relative;
-    max-height: 80vh;
+    max-height: 85vh;
     overflow-y: auto;
+    pointer-events: auto; /* Explicitly allow clicks */
 }
 
 .close-btn {
@@ -628,6 +656,7 @@ body:hover .cursor-glow {
     cursor: pointer;
     color: var(--text-secondary);
     transition: color 0.3s;
+    z-index: 10001;
 }
 
 .close-btn:hover { color: var(--accent-3); }
@@ -640,6 +669,7 @@ body:hover .cursor-glow {
     border: 1px solid var(--glass-border);
     border-radius: 10px;
     color: white;
+    pointer-events: auto; /* Explicitly allow clicks */
 }
 
 .hint {
@@ -664,19 +694,57 @@ body:hover .cursor-glow {
     border: 1px solid var(--glass-border);
 }
 
-.delete-btn {
-    background: rgba(239, 68, 68, 0.2);
-    color: #ef4444;
-    border: 1px solid rgba(239, 68, 68, 0.3);
+.action-btns {
+    display: flex;
+    gap: 8px;
+}
+
+.edit-btn, .delete-btn {
     padding: 6px 12px;
     border-radius: 6px;
     cursor: pointer;
     transition: all 0.3s;
+    border: none;
+    font-weight: 600;
+}
+
+.edit-btn {
+    background: rgba(6, 182, 212, 0.2);
+    color: var(--accent-1);
+    border: 1px solid rgba(6, 182, 212, 0.3);
+}
+
+.edit-btn:hover {
+    background: var(--accent-1);
+    color: white;
+}
+
+.delete-btn {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
 .delete-btn:hover {
     background: #ef4444;
     color: white;
+}
+
+/* === Lightbox Specifics === */
+.lightbox {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    cursor: zoom-out;
+}
+
+.lightbox img {
+    max-width: 90%;
+    max-height: 90vh;
+    border-radius: 10px;
+    box-shadow: 0 0 50px rgba(0,0,0,0.8);
+    border: 2px solid var(--glass-border);
+    pointer-events: auto;
 }
 
 /* === Animations === */

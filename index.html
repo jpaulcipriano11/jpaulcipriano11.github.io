@@ -242,16 +242,26 @@
             </div>
 
             <div id="adminDashboard" style="display:none;">
-                <h3>Add New Project</h3>
+                <h3 id="formTitle">Add New Project</h3>
                 <input type="text" id="projTitle" placeholder="Project Title">
-                <input type="text" id="projImg" placeholder="Image URL">
+                <textarea id="projImages" placeholder="Image URLs (paste one URL per line)" rows="4"></textarea>
                 <textarea id="projDesc" placeholder="Project Description"></textarea>
-                <button class="btn btn-primary" id="addProjBtn">Add Project</button>
                 
-                <h3>Manage Projects</h3>
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <button class="btn btn-primary" id="saveProjBtn">Add Project</button>
+                    <button class="btn btn-secondary" id="cancelEditBtn" style="display:none;">Cancel</button>
+                </div>
+                
+                <h3 style="margin-top: 30px;">Manage Projects</h3>
                 <ul id="adminProjList"></ul>
             </div>
         </div>
+    </div>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox" class="lightbox">
+        <span class="close-btn" id="closeLightbox">&times;</span>
+        <img id="lightboxImg" src="" alt="Full size view">
     </div>
 
     <script src="script.js"></script>
