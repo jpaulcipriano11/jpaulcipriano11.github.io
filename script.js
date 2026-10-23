@@ -95,12 +95,14 @@ const uploadStatus = document.getElementById('uploadStatus');
 
 function loadProjects() {
     projectsGrid.innerHTML = '<p style="text-align:center; grid-column: 1/-1; color: var(--text-secondary);">Loading projects from cloud...</p>';
+    
     db.collection("projects").orderBy("timestamp", "desc").get().then((querySnapshot) => {
         projectsGrid.innerHTML = '';
         if (querySnapshot.empty) {
             projectsGrid.innerHTML = '<p style="text-align:center; grid-column: 1/-1; color: var(--text-secondary);">No projects added yet. Use the Admin panel to add some!</p>';
             return;
         }
+
         querySnapshot.forEach((doc) => {
             const proj = doc.data();
             const images = proj.images || [];
@@ -116,7 +118,18 @@ function loadProjects() {
                 });
                 imagesHtml += `</div>`;
             }
-            card.innerHTML = `${imagesHtml}<h3>${proj.title}</h3><p>${proj.desc}</p>`;
+
+            // --- NEW DESCRIPTION LOGIC ---
+            let descHtml = `<p class="project-desc truncated" id="desc-${doc.id}">${proj.desc}</p>`;
+            let btnHtml = '';
+            
+            // Only show the button if the description is longer than 120 characters
+            if (proj.desc && proj.desc.length > 120) {
+                btnHtml = `<button class="read-more-btn" onclick="toggleDesc(this, 'desc-${doc.id}')">Read more</button>`;
+            }
+            // -----------------------------
+
+            card.innerHTML = `${imagesHtml}<h3>${proj.title}</h3>${descHtml}${btnHtml}`;
             projectsGrid.appendChild(card);
         });
     }).catch((error) => {
@@ -124,6 +137,18 @@ function loadProjects() {
         projectsGrid.innerHTML = '<p style="text-align:center; grid-column: 1/-1; color: #ef4444;">Error loading projects. Check console.</p>';
     });
 }
+
+// Toggle Description Function
+window.toggleDesc = function(btn, descId) {
+    const descElement = document.getElementById(descId);
+    if (descElement.classList.contains('truncated')) {
+        descElement.classList.remove('truncated');
+        btn.textContent = 'Read less';
+    } else {
+        descElement.classList.add('truncated');
+        btn.textContent = 'Read more';
+    }
+};
 
 function loadAdminProjects() {
     adminProjList.innerHTML = '<li style="justify-content:center;">Loading...</li>';
