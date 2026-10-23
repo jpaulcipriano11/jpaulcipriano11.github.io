@@ -71,7 +71,7 @@ loginBtn.addEventListener('click', () => {
     } else { alert('Incorrect password!'); }
 });
 
-// === 6. Projects Management ===
+// === 6. Projects Management (CROSS-DEVICE FIX) ===
 let editIndex = -1;
 const projTitle = document.getElementById('projTitle');
 const projImages = document.getElementById('projImages');
@@ -82,12 +82,41 @@ const formTitle = document.getElementById('formTitle');
 const projectsGrid = document.getElementById('projectsGrid');
 const adminProjList = document.getElementById('adminProjList');
 
+// 🌟 CROSS-DEVICE PROJECTS: Add your projects here so they show up on ALL devices! 🌟
+const defaultProjects = [
+    {
+        title: "Online Sports Tournament Registration",
+        images: [
+            "https://i.imgur.com/KdW8BUb.jpeg" // Replace with your actual direct image link
+        ],
+        desc: "A modern web-based tournament management platform designed to streamline player registration and event administration. Includes online registration, division selection, payment tracking, and AI-assisted development features."
+    },
+    // You can copy and paste the block below to add more projects:
+    /*
+    {
+        title: "Another Project Name",
+        images: [
+            "https://link-to-image-1.jpg",
+            "https://link-to-image-2.jpg"
+        ],
+        desc: "Description of this amazing project goes here."
+    }
+    */
+];
+
 function loadProjects() {
-    const projects = JSON.parse(localStorage.getItem('paul_projects')) || [];
+    // Try to get projects from local storage first
+    let projects = JSON.parse(localStorage.getItem('paul_projects'));
+
+    // If local storage is empty (like on a new phone), use the default projects from the code above
+    if (!projects || projects.length === 0) {
+        projects = defaultProjects;
+    }
+
     projectsGrid.innerHTML = '';
     
     if (projects.length === 0) {
-        projectsGrid.innerHTML = '<p style="text-align:center; grid-column: 1/-1; color: var(--text-secondary);">No projects added yet. Use the Admin panel to add some!</p>';
+        projectsGrid.innerHTML = '<p style="text-align:center; grid-column: 1/-1; color: var(--text-secondary);">No projects added yet.</p>';
         return;
     }
 
@@ -112,8 +141,15 @@ function loadProjects() {
 }
 
 function loadAdminProjects() {
+    // Admin panel only shows locally saved projects to avoid cluttering the edit list with defaults
     const projects = JSON.parse(localStorage.getItem('paul_projects')) || [];
     adminProjList.innerHTML = '';
+    
+    if(projects.length === 0) {
+        adminProjList.innerHTML = '<li style="justify-content:center; color:var(--text-secondary);">No locally saved projects. Edit the defaultProjects array in script.js to change global projects.</li>';
+        return;
+    }
+
     projects.forEach((proj, index) => {
         const li = document.createElement('li');
         li.innerHTML = `<span>${proj.title}</span><div class="action-btns"><button class="edit-btn" onclick="editProject(${index})">Edit</button><button class="delete-btn" onclick="deleteProject(${index})">Delete</button></div>`;
@@ -153,11 +189,11 @@ saveProjBtn.addEventListener('click', () => {
 
     if (editIndex >= 0) {
         projects[editIndex] = { title, images, desc };
-        alert('Project updated successfully!');
+        alert('Project updated successfully! (Note: This only saves to this specific device/browser)');
         cancelEditBtn.click();
     } else {
         projects.push({ title, images, desc });
-        alert('Project added successfully!');
+        alert('Project added successfully! (Note: This only saves to this specific device/browser)');
         projTitle.value = ''; projImages.value = ''; projDesc.value = '';
     }
 
