@@ -306,28 +306,30 @@ document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && lightbox
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => { loadProjects(); type(); });
 
-document.getElementById('contactForm').addEventListener('submit', function(e) {
-    e.preventDefault(); // Prevent the page from reloading
+document.getElementById('contactForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    
+    const btn = this.querySelector('button');
+    const originalText = btn.innerHTML;
+    
+    // Change button to loading state
+    btn.innerHTML = 'Sending... <i class="fas fa-spinner fa-spin"></i>';
+    btn.disabled = true;
 
-    // 1. Get the values the user typed
-    const name = document.getElementById('contactName').value.trim();
-    const email = document.getElementById('contactEmail').value.trim();
-    const message = document.getElementById('contactMessage').value.trim();
+    // ⚠️ REPLACE WITH YOUR ACTUAL SERVICE ID AND TEMPLATE ID
+    const serviceID = 'service_wxmu6km';
+    const templateID = 'template_s5wn5qc';
 
-    // 2. Your email address
-    const myEmail = "jpaulcipriano@gmail.com";
-
-    // 3. Format the email subject and body
-    const subject = `Portfolio Contact from ${name}`;
-    const bodyText = `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`;
-
-    // 4. Create the mailto link (encodeURIComponent ensures spaces and line breaks work perfectly)
-    const mailtoLink = `mailto:${myEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyText)}`;
-
-    // 5. Open their default email app
-    window.location.href = mailtoLink;
-
-    // 6. Show a quick confirmation and clear the form
-    alert("Your email app should have opened! If it didn't, please email me directly at " + myEmail);
-    this.reset(); 
+    emailjs.sendForm(serviceID, templateID, this)
+        .then(() => {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            alert('Message sent successfully! I will get back to you soon.');
+            this.reset(); // Clear the form
+        }, (err) => {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            alert('Failed to send message. Please try again or email me directly.');
+            console.log('EmailJS FAILED...', err);
+        });
 });
