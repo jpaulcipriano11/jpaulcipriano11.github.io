@@ -167,60 +167,63 @@ cancelEditBtn.addEventListener('click', () => {
     uploadStatus.style.display = 'none';
 });
 
-// SAVE (ADD OR UPDATE) PROJECT WITH IMGBB UPLOAD
+// SAVE (ADD OR UPDATE) PROJECT WITH IMGBB UPLOAD (MULTIPLE IMAGES SUPPORT)
 saveProjBtn.addEventListener('click', async () => {
     const title = projTitle.value.trim();
     const desc = projDesc.value.trim();
-    const file = projImageFile.files[0];
+    const files = projImageFile.files; // Get all selected files
 
     if (!title || !desc) { alert('Please fill in the title and description.'); return; }
 
     saveProjBtn.textContent = 'Processing...';
     saveProjBtn.disabled = true;
 
-    let imageUrl = "";
+    let imageUrls = [];
 
-    // If editing and no new file is selected, keep the old image
-    if (editDocId && !file) {
+    // If editing and no new files are selected, keep the old images
+    if (editDocId && files.length === 0) {
         const doc = await db.collection("projects").doc(editDocId).get();
         if (doc.exists) {
-            const oldData = doc.data();
-            imageUrl = oldData.images && oldData.images.length > 0 ? oldData.images[0] : "";
+            imageUrls = doc.data().images || [];
         }
     }
 
-    // If a new file is selected, upload to ImgBB
-    if (file) {
+    // If new files are selected, upload them to ImgBB one by one
+    if (files.length > 0) {
         uploadStatus.style.display = 'block';
-        uploadStatus.textContent = 'Uploading image to cloud...';
-        
-        const formData = new FormData();
-        formData.append('image', file);
 
-        try {
-            const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
-                method: 'POST',
-                body: formData
-            });
-            const data = await response.json();
-            
-            if (data.success) {
-                imageUrl = data.data.url; // This is the direct image link!
-                uploadStatus.textContent = 'Image uploaded successfully!';
-            } else {
-                throw new Error(data.error ? data.error.message : 'Upload failed');
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            uploadStatus.textContent = `Uploading image ${i + 1} of ${files.length}...`;
+
+            const formData = new FormData();
+            formData.append('image', file);
+
+            try {
+                const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    imageUrls.push(data.data.url);
+                } else {
+                    throw new Error(data.error ? data.error.message : 'Upload failed');
+                }
+            } catch (error) {
+                alert(`Image upload failed for ${file.name}: ${error.message}`);
+                saveProjBtn.textContent = editDocId ? 'Update Project' : 'Add Project';
+                saveProjBtn.disabled = false;
+                uploadStatus.style.display = 'none';
+                return; // Stop the process if one fails
             }
-        } catch (error) {
-            alert('Image upload failed: ' + error.message + '\n\nMake sure you pasted your ImgBB API key correctly in script.js!');
-            saveProjBtn.textContent = editDocId ? 'Update Project' : 'Add Project';
-            saveProjBtn.disabled = false;
-            uploadStatus.style.display = 'none';
-            return;
         }
+        uploadStatus.textContent = 'All images uploaded successfully!';
     }
 
-    if (!imageUrl) {
-        alert('Please select an image to upload.');
+    if (imageUrls.length === 0) {
+        alert('Please select at least one image to upload.');
         saveProjBtn.textContent = editDocId ? 'Update Project' : 'Add Project';
         saveProjBtn.disabled = false;
         uploadStatus.style.display = 'none';
@@ -229,7 +232,7 @@ saveProjBtn.addEventListener('click', async () => {
 
     const projectData = { 
         title, 
-        images: [imageUrl], 
+        images: imageUrls, // Save the array of multiple URLs
         desc, 
         timestamp: firebase.firestore.FieldValue.serverTimestamp() 
     };
