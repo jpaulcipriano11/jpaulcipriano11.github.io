@@ -1,51 +1,60 @@
-// === 1. Typing Effect ===
+// ==========================================
+// 1. FIREBASE CONFIGURATION
+// ==========================================
+const firebaseConfig = {
+    apiKey: "AIzaSyDMSgb-0uvwkgghI_VViWhbMhgMcvd4O74",
+    authDomain: "paulsportfolio.firebaseapp.com",
+    projectId: "paulsportfolio",
+    storageBucket: "paulsportfolio.firebasestorage.app",
+    messagingSenderId: "978444249147",
+    appId: "1:978444249147:web:0706b95b50cdbf1f86d41e"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// ==========================================
+// 2. IMGBB API CONFIGURATION
+// ==========================================
+// Replace this with your actual ImgBB API Key!
+const IMGBB_API_KEY = "d2f5e9da99064c41bdf0f8feafd5d741"; 
+
+// ==========================================
+// 3. UI ANIMATIONS & TYPING EFFECT
+// ==========================================
 const typedTextElement = document.getElementById('typed-text');
 const textArray = ["Customer Service Rep", "Technical Support Specialist", "Web Developer", "Problem Solver"];
-let textArrayIndex = 0;
-let charIndex = 0;
-let isDeleting = false;
+let textArrayIndex = 0, charIndex = 0, isDeleting = false;
 
 function type() {
     const currentText = textArray[textArrayIndex];
     if (isDeleting) { typedTextElement.textContent = currentText.substring(0, charIndex - 1); charIndex--; } 
     else { typedTextElement.textContent = currentText.substring(0, charIndex + 1); charIndex++; }
-
     let typeSpeed = 100;
     if (isDeleting) typeSpeed /= 2;
-
     if (!isDeleting && charIndex === currentText.length) { typeSpeed = 2000; isDeleting = true; } 
     else if (isDeleting && charIndex === 0) { isDeleting = false; textArrayIndex = (textArrayIndex + 1) % textArray.length; typeSpeed = 500; }
     setTimeout(type, typeSpeed);
 }
 
-// === 2. Cursor Glow Effect ===
 const cursorGlow = document.getElementById('cursorGlow');
 if (window.matchMedia("(pointer: fine)").matches) {
-    document.addEventListener('mousemove', (e) => {
-        cursorGlow.style.left = e.clientX + 'px';
-        cursorGlow.style.top = e.clientY + 'px';
-    });
+    document.addEventListener('mousemove', (e) => { cursorGlow.style.left = e.clientX + 'px'; cursorGlow.style.top = e.clientY + 'px'; });
 }
 
-// === 3. Scroll Animations ===
 const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry, index) => {
-        if (entry.isIntersecting) {
-            setTimeout(() => { entry.target.classList.add('visible'); }, index * 100);
-        }
-    });
+    entries.forEach((entry, index) => { if (entry.isIntersecting) { setTimeout(() => { entry.target.classList.add('visible'); }, index * 100); } });
 }, { threshold: 0.1 });
 document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
-// === 4. Mobile Menu Toggle ===
 const menuToggle = document.getElementById('menuToggle');
 const navLinks = document.getElementById('navLinks');
 menuToggle.addEventListener('click', () => { navLinks.classList.toggle('active'); });
-document.querySelectorAll('.nav-links a').forEach(link => {
-    link.addEventListener('click', () => { navLinks.classList.remove('active'); });
-});
+document.querySelectorAll('.nav-links a').forEach(link => { link.addEventListener('click', () => { navLinks.classList.remove('active'); }); });
 
-// === 5. Admin Panel Logic ===
+// ==========================================
+// 4. ADMIN PANEL LOGIC
+// ==========================================
 const adminModal = document.getElementById('adminModal');
 const adminTrigger = document.getElementById('adminTrigger');
 const closeAdmin = document.getElementById('closeAdmin');
@@ -58,7 +67,6 @@ const urlParams = new URLSearchParams(window.location.search);
 if (urlParams.get('admin') === 'true') { openAdminModal(); }
 
 adminTrigger.addEventListener('click', (e) => { e.preventDefault(); openAdminModal(); });
-
 function openAdminModal() { adminModal.style.display = 'block'; }
 closeAdmin.addEventListener('click', () => { adminModal.style.display = 'none'; });
 window.addEventListener('click', (e) => { if (e.target === adminModal) { adminModal.style.display = 'none'; } });
@@ -71,184 +79,220 @@ loginBtn.addEventListener('click', () => {
     } else { alert('Incorrect password!'); }
 });
 
-// === 6. Projects Management (CROSS-DEVICE FIX) ===
-let editIndex = -1;
+// ==========================================
+// 5. PROJECTS & IMGBB UPLOAD MANAGEMENT
+// ==========================================
+let editDocId = null;
 const projTitle = document.getElementById('projTitle');
-const projImages = document.getElementById('projImages');
+const projImageFile = document.getElementById('projImageFile');
 const projDesc = document.getElementById('projDesc');
 const saveProjBtn = document.getElementById('saveProjBtn');
 const cancelEditBtn = document.getElementById('cancelEditBtn');
 const formTitle = document.getElementById('formTitle');
 const projectsGrid = document.getElementById('projectsGrid');
 const adminProjList = document.getElementById('adminProjList');
-
-// 🌟 CROSS-DEVICE PROJECTS: Add your projects here so they show up on ALL devices! 🌟
-const defaultProjects = [
-    {
-        title: "Online Sports Tournament Registration",
-        images: [
-            "https://i.imgur.com/KdW8BUb.jpeg" // Replace with your actual direct image link
-        ],
-        desc: "A modern web-based tournament management platform designed to streamline player registration and event administration. Includes online registration, division selection, payment tracking, and AI-assisted development features."
-    },
-    // You can copy and paste the block below to add more projects:
-    /*
-    {
-        title: "Another Project Name",
-        images: [
-            "https://link-to-image-1.jpg",
-            "https://link-to-image-2.jpg"
-        ],
-        desc: "Description of this amazing project goes here."
-    }
-    */
-];
+const uploadStatus = document.getElementById('uploadStatus');
 
 function loadProjects() {
-    // Try to get projects from local storage first
-    let projects = JSON.parse(localStorage.getItem('paul_projects'));
-
-    // If local storage is empty (like on a new phone), use the default projects from the code above
-    if (!projects || projects.length === 0) {
-        projects = defaultProjects;
-    }
-
-    projectsGrid.innerHTML = '';
-    
-    if (projects.length === 0) {
-        projectsGrid.innerHTML = '<p style="text-align:center; grid-column: 1/-1; color: var(--text-secondary);">No projects added yet.</p>';
-        return;
-    }
-
-    projects.forEach((proj) => {
-        const images = proj.images || (proj.img ? [proj.img] : []);
-        const card = document.createElement('div');
-        card.className = 'project-card glass-card fade-in visible';
-        
-        let imagesHtml = '';
-        if (images.length > 0) {
-            const gridClass = images.length === 1 ? 'project-images-grid single-image' : 'project-images-grid';
-            imagesHtml = `<div class="${gridClass}">`;
-            images.forEach(imgUrl => {
-                imagesHtml += `<img src="${imgUrl}" class="project-thumb" alt="${proj.title}" onclick="openLightbox('${imgUrl}')" onerror="this.style.display='none'">`;
-            });
-            imagesHtml += `</div>`;
+    projectsGrid.innerHTML = '<p style="text-align:center; grid-column: 1/-1; color: var(--text-secondary);">Loading projects from cloud...</p>';
+    db.collection("projects").orderBy("timestamp", "desc").get().then((querySnapshot) => {
+        projectsGrid.innerHTML = '';
+        if (querySnapshot.empty) {
+            projectsGrid.innerHTML = '<p style="text-align:center; grid-column: 1/-1; color: var(--text-secondary);">No projects added yet. Use the Admin panel to add some!</p>';
+            return;
         }
-
-        card.innerHTML = `${imagesHtml}<h3>${proj.title}</h3><p>${proj.desc}</p>`;
-        projectsGrid.appendChild(card);
+        querySnapshot.forEach((doc) => {
+            const proj = doc.data();
+            const images = proj.images || [];
+            const card = document.createElement('div');
+            card.className = 'project-card glass-card fade-in visible';
+            
+            let imagesHtml = '';
+            if (images.length > 0) {
+                const gridClass = images.length === 1 ? 'project-images-grid single-image' : 'project-images-grid';
+                imagesHtml = `<div class="${gridClass}">`;
+                images.forEach(imgUrl => {
+                    imagesHtml += `<img src="${imgUrl}" class="project-thumb" alt="${proj.title}" onclick="openLightbox('${imgUrl}')" onerror="this.style.display='none'">`;
+                });
+                imagesHtml += `</div>`;
+            }
+            card.innerHTML = `${imagesHtml}<h3>${proj.title}</h3><p>${proj.desc}</p>`;
+            projectsGrid.appendChild(card);
+        });
+    }).catch((error) => {
+        console.error("Error getting documents: ", error);
+        projectsGrid.innerHTML = '<p style="text-align:center; grid-column: 1/-1; color: #ef4444;">Error loading projects. Check console.</p>';
     });
 }
 
 function loadAdminProjects() {
-    // Admin panel only shows locally saved projects to avoid cluttering the edit list with defaults
-    const projects = JSON.parse(localStorage.getItem('paul_projects')) || [];
-    adminProjList.innerHTML = '';
-    
-    if(projects.length === 0) {
-        adminProjList.innerHTML = '<li style="justify-content:center; color:var(--text-secondary);">No locally saved projects. Edit the defaultProjects array in script.js to change global projects.</li>';
-        return;
-    }
-
-    projects.forEach((proj, index) => {
-        const li = document.createElement('li');
-        li.innerHTML = `<span>${proj.title}</span><div class="action-btns"><button class="edit-btn" onclick="editProject(${index})">Edit</button><button class="delete-btn" onclick="deleteProject(${index})">Delete</button></div>`;
-        adminProjList.appendChild(li);
+    adminProjList.innerHTML = '<li style="justify-content:center;">Loading...</li>';
+    db.collection("projects").orderBy("timestamp", "desc").get().then((querySnapshot) => {
+        adminProjList.innerHTML = '';
+        if (querySnapshot.empty) {
+            adminProjList.innerHTML = '<li style="justify-content:center; color:var(--text-secondary);">No projects in database yet.</li>';
+            return;
+        }
+        querySnapshot.forEach((doc) => {
+            const proj = doc.data();
+            const li = document.createElement('li');
+            li.innerHTML = `<span>${proj.title}</span><div class="action-btns"><button class="edit-btn" onclick="editProject('${doc.id}')">Edit</button><button class="delete-btn" onclick="deleteProject('${doc.id}')">Delete</button></div>`;
+            adminProjList.appendChild(li);
+        });
     });
 }
 
-window.editProject = function(index) {
-    const projects = JSON.parse(localStorage.getItem('paul_projects')) || [];
-    const proj = projects[index];
-    projTitle.value = proj.title;
-    projImages.value = proj.images ? proj.images.join('\n') : (proj.img || '');
-    projDesc.value = proj.desc;
-    editIndex = index;
-    formTitle.textContent = 'Edit Project';
-    saveProjBtn.textContent = 'Update Project';
-    cancelEditBtn.style.display = 'inline-flex';
+window.editProject = function(docId) {
+    db.collection("projects").doc(docId).get().then((doc) => {
+        if (doc.exists) {
+            const proj = doc.data();
+            projTitle.value = proj.title;
+            projDesc.value = proj.desc;
+            // Note: We can't pre-fill a file input for security reasons, so we leave it blank for re-upload or you can add a note.
+            projImageFile.value = ''; 
+            editDocId = docId;
+            formTitle.textContent = 'Edit Project';
+            saveProjBtn.textContent = 'Update Project';
+            cancelEditBtn.style.display = 'inline-flex';
+        }
+    });
 };
 
 cancelEditBtn.addEventListener('click', () => {
-    editIndex = -1;
-    projTitle.value = ''; projImages.value = ''; projDesc.value = '';
+    editDocId = null;
+    projTitle.value = ''; projImageFile.value = ''; projDesc.value = '';
     formTitle.textContent = 'Add New Project';
     saveProjBtn.textContent = 'Add Project';
     cancelEditBtn.style.display = 'none';
+    uploadStatus.style.display = 'none';
 });
 
-saveProjBtn.addEventListener('click', () => {
+// SAVE (ADD OR UPDATE) PROJECT WITH IMGBB UPLOAD
+saveProjBtn.addEventListener('click', async () => {
     const title = projTitle.value.trim();
-    const imagesText = projImages.value.trim();
     const desc = projDesc.value.trim();
+    const file = projImageFile.files[0];
 
-    if (!title || !imagesText) { alert('Please fill in the title and at least one image URL.'); return; }
+    if (!title || !desc) { alert('Please fill in the title and description.'); return; }
 
-    const images = imagesText.split('\n').map(url => url.trim()).filter(url => url.length > 0);
-    const projects = JSON.parse(localStorage.getItem('paul_projects')) || [];
+    saveProjBtn.textContent = 'Processing...';
+    saveProjBtn.disabled = true;
 
-    if (editIndex >= 0) {
-        projects[editIndex] = { title, images, desc };
-        alert('Project updated successfully! (Note: This only saves to this specific device/browser)');
-        cancelEditBtn.click();
-    } else {
-        projects.push({ title, images, desc });
-        alert('Project added successfully! (Note: This only saves to this specific device/browser)');
-        projTitle.value = ''; projImages.value = ''; projDesc.value = '';
+    let imageUrl = "";
+
+    // If editing and no new file is selected, keep the old image
+    if (editDocId && !file) {
+        const doc = await db.collection("projects").doc(editDocId).get();
+        if (doc.exists) {
+            const oldData = doc.data();
+            imageUrl = oldData.images && oldData.images.length > 0 ? oldData.images[0] : "";
+        }
     }
 
-    localStorage.setItem('paul_projects', JSON.stringify(projects));
-    loadProjects();
-    loadAdminProjects();
+    // If a new file is selected, upload to ImgBB
+    if (file) {
+        uploadStatus.style.display = 'block';
+        uploadStatus.textContent = 'Uploading image to cloud...';
+        
+        const formData = new FormData();
+        formData.append('image', file);
+
+        try {
+            const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+            
+            if (data.success) {
+                imageUrl = data.data.url; // This is the direct image link!
+                uploadStatus.textContent = 'Image uploaded successfully!';
+            } else {
+                throw new Error(data.error ? data.error.message : 'Upload failed');
+            }
+        } catch (error) {
+            alert('Image upload failed: ' + error.message + '\n\nMake sure you pasted your ImgBB API key correctly in script.js!');
+            saveProjBtn.textContent = editDocId ? 'Update Project' : 'Add Project';
+            saveProjBtn.disabled = false;
+            uploadStatus.style.display = 'none';
+            return;
+        }
+    }
+
+    if (!imageUrl) {
+        alert('Please select an image to upload.');
+        saveProjBtn.textContent = editDocId ? 'Update Project' : 'Add Project';
+        saveProjBtn.disabled = false;
+        uploadStatus.style.display = 'none';
+        return;
+    }
+
+    const projectData = { 
+        title, 
+        images: [imageUrl], 
+        desc, 
+        timestamp: firebase.firestore.FieldValue.serverTimestamp() 
+    };
+
+    uploadStatus.textContent = 'Saving to database...';
+
+    if (editDocId) {
+        db.collection("projects").doc(editDocId).update(projectData).then(() => {
+            alert('Project updated successfully!');
+            cancelEditBtn.click();
+            loadProjects();
+            loadAdminProjects();
+        }).catch((error) => { alert('Error updating: ' + error.message); });
+    } else {
+        db.collection("projects").add(projectData).then(() => {
+            alert('Project added successfully!');
+            projTitle.value = ''; projImageFile.value = ''; projDesc.value = '';
+            loadProjects();
+            loadAdminProjects();
+        }).catch((error) => { alert('Error adding: ' + error.message); });
+    }
+    
+    setTimeout(() => { 
+        saveProjBtn.textContent = editDocId ? 'Update Project' : 'Add Project'; 
+        saveProjBtn.disabled = false; 
+        uploadStatus.style.display = 'none';
+    }, 1000);
 });
 
-window.deleteProject = function(index) {
-    if (confirm('Are you sure you want to delete this project?')) {
-        const projects = JSON.parse(localStorage.getItem('paul_projects')) || [];
-        projects.splice(index, 1);
-        localStorage.setItem('paul_projects', JSON.stringify(projects));
-        if (editIndex === index) { cancelEditBtn.click(); } 
-        else if (editIndex > index) { editIndex--; }
-        loadProjects();
-        loadAdminProjects();
+window.deleteProject = function(docId) {
+    if (confirm('Are you sure you want to delete this project from the cloud?')) {
+        db.collection("projects").doc(docId).delete().then(() => {
+            if (editDocId === docId) { cancelEditBtn.click(); }
+            loadProjects();
+            loadAdminProjects();
+        }).catch((error) => { alert('Error deleting: ' + error.message); });
     }
 }
 
-// === 7. Lightbox Logic ===
+// ==========================================
+// 6. LIGHTBOX LOGIC
+// ==========================================
 const lightbox = document.getElementById('lightbox');
 const lightboxImg = document.getElementById('lightboxImg');
 const closeLightbox = document.getElementById('closeLightbox');
 
 window.openLightbox = function(src) {
-    if (lightbox && lightboxImg) {
-        lightboxImg.src = src;
-        lightbox.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    }
+    if (lightbox && lightboxImg) { lightboxImg.src = src; lightbox.style.display = 'flex'; document.body.style.overflow = 'hidden'; }
 }
-
 function closeLightboxFunc() {
-    if (lightbox) {
-        lightbox.style.display = 'none';
-        if (lightboxImg) lightboxImg.src = '';
-        document.body.style.overflow = '';
-    }
+    if (lightbox) { lightbox.style.display = 'none'; if (lightboxImg) lightboxImg.src = ''; document.body.style.overflow = ''; }
 }
-
 if (closeLightbox) { closeLightbox.addEventListener('click', closeLightboxFunc); }
-if (lightbox) {
-    lightbox.addEventListener('click', (e) => { if (e.target === lightbox) { closeLightboxFunc(); } });
-}
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && lightbox && lightbox.style.display === 'flex') { closeLightboxFunc(); }
-});
+if (lightbox) { lightbox.addEventListener('click', (e) => { if (e.target === lightbox) { closeLightboxFunc(); } }); }
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && lightbox && lightbox.style.display === 'flex') { closeLightboxFunc(); } });
 
-// === Initial Load ===
+// ==========================================
+// 7. INITIAL LOAD & CONTACT FORM
+// ==========================================
 document.addEventListener('DOMContentLoaded', () => { loadProjects(); type(); });
 
-// === Contact Form Mock Submit ===
 document.getElementById('contactForm').addEventListener('submit', function(e) {
     e.preventDefault();
-    alert('Thank you for your message! (Note: Connect this to a backend service like Formspree or EmailJS to receive actual emails).');
+    alert('Thank you for your message! (Connect to Formspree/EmailJS for real emails).');
     this.reset();
 });
