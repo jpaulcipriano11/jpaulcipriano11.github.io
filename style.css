@@ -47,7 +47,7 @@ h1, h2, h3, h4 {
     background-color: var(--bg-secondary);
 }
 
-/* === Background Orbs & Cursor Glow (CRITICAL FIX: pointer-events none) === */
+/* === Background Orbs & Cursor Glow === */
 .bg-orbs {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
@@ -301,7 +301,7 @@ body:hover .cursor-glow { opacity: 1; }
 .timeline-content li { margin-bottom: 8px; padding-left: 20px; position: relative; }
 .timeline-content li::before { content: '▹'; position: absolute; left: 0; color: var(--accent-1); }
 
-/* === Projects Grid & Styling (CRITICAL FIX: Square Images) === */
+/* === Projects Grid & Styling === */
 .projects-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -327,9 +327,9 @@ body:hover .cursor-glow { opacity: 1; }
 
 .project-thumb {
     width: 100%;
-    aspect-ratio: 1 / 1; /* Forces a perfect square */
-    object-fit: contain; /* Shows the ENTIRE image without cutting it off */
-    background: rgba(255, 255, 255, 0.03); /* Subtle background for letterboxing */
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+    background: rgba(255, 255, 255, 0.03);
     border-radius: 12px;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -343,7 +343,6 @@ body:hover .cursor-glow { opacity: 1; }
 }
 
 .project-card h3 { margin-bottom: 10px; font-size: 1.3rem; }
-.project-card p { color: var(--text-secondary); font-size: 0.95rem; flex-grow: 1; }
 
 /* === Skills Grid === */
 .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
@@ -376,7 +375,7 @@ body:hover .cursor-glow { opacity: 1; }
 .footer { background: var(--bg-primary); padding: 40px 0; text-align: center; border-top: 1px solid var(--glass-border); }
 .admin-trigger { color: transparent; font-size: 0.1rem; text-decoration: none; user-select: none; display: block; margin-top: 10px; }
 
-/* === Modals (CRITICAL FIX: Z-Index & Pointer Events) === */
+/* === Modals === */
 .modal {
     display: none;
     position: fixed;
@@ -389,8 +388,8 @@ body:hover .cursor-glow { opacity: 1; }
 
 .modal-content {
     position: relative;
-    z-index: 10000; /* Higher than modal background */
-    pointer-events: auto !important; /* CRITICAL: Allows clicking inside the modal */
+    z-index: 10000;
+    pointer-events: auto !important;
     background-color: var(--bg-secondary);
     margin: 5% auto;
     padding: 40px;
@@ -402,11 +401,7 @@ body:hover .cursor-glow { opacity: 1; }
     overflow-y: auto;
 }
 
-/* Force all inputs and buttons inside modal to be clickable */
-.modal-content input, 
-.modal-content textarea, 
-.modal-content button, 
-.modal-content select {
+.modal-content input, .modal-content textarea, .modal-content button, .modal-content select {
     pointer-events: auto !important;
     z-index: 10001;
     position: relative;
@@ -479,14 +474,14 @@ body:hover .cursor-glow { opacity: 1; }
     .timeline-dot, .timeline-item:nth-child(even) .timeline-dot { left: 12px; right: auto; }
 }
 
-/* === Project Description Truncation (FINAL FIX) === */
+/* === Project Description Truncation (ROBUST FIX) === */
 .project-desc {
     color: var(--text-secondary);
     font-size: 0.95rem;
     margin-bottom: 10px;
     line-height: 1.5;
     
-    /* FORCE truncation by default */
+    /* Truncate by default */
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
@@ -494,7 +489,7 @@ body:hover .cursor-glow { opacity: 1; }
     text-overflow: ellipsis;
     max-height: 4.5em;
     
-    /* NO TRANSITION HERE - it breaks line-clamp! */
+    /* NO TRANSITION HERE - it breaks line-clamp toggling! */
 }
 
 /* When expanded, remove limits */

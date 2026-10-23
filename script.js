@@ -9,15 +9,13 @@ const firebaseConfig = {
     messagingSenderId: "978444249147",
     appId: "1:978444249147:web:0706b95b50cdbf1f86d41e"
 };
-
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 // ==========================================
 // 2. IMGBB API CONFIGURATION
 // ==========================================
-// Replace this with your actual ImgBB API Key!
-const IMGBB_API_KEY = "d2f5e9da99064c41bdf0f8feafd5d741"; 
+const IMGBB_API_KEY = "d2f5e9da99064c41bdf0f8feafd5d741";
 
 // ==========================================
 // 3. UI ANIMATIONS & TYPING EFFECT
@@ -109,7 +107,6 @@ function loadProjects() {
             const card = document.createElement('div');
             card.className = 'project-card glass-card fade-in visible';
             
-            // 1. Build Images HTML
             let imagesHtml = '';
             if (images.length > 0) {
                 const gridClass = images.length === 1 ? 'project-images-grid single-image' : 'project-images-grid';
@@ -120,17 +117,14 @@ function loadProjects() {
                 imagesHtml += `</div>`;
             }
 
-            // 2. Build Description and Button HTML
-            // CSS handles truncation by default, so we just add the 'expanded' class when clicked
+            // CSS handles truncation by default. We only add 'expanded' class when clicked.
             let descHtml = `<p class="project-desc" id="desc-${doc.id}">${proj.desc}</p>`;
             let btnHtml = '';
             
-            // Show button if text is long enough
             if (proj.desc && proj.desc.length > 100) {
                 btnHtml = `<button class="read-more-btn" onclick="toggleDesc(this, 'desc-${doc.id}')">View more</button>`;
             }
 
-            // 3. Put it all together
             card.innerHTML = `${imagesHtml}<h3>${proj.title}</h3>${descHtml}${btnHtml}`;
             projectsGrid.appendChild(card);
         });
@@ -140,43 +134,14 @@ function loadProjects() {
     });
 }
 
-// Toggle Description Function
 window.toggleDesc = function(btn, descId) {
     const descElement = document.getElementById(descId);
-    
-    // Toggle the 'expanded' class
     if (descElement.classList.contains('expanded')) {
         descElement.classList.remove('expanded');
         btn.textContent = 'View more';
     } else {
         descElement.classList.add('expanded');
         btn.textContent = 'View less';
-    }
-};
-
-// Toggle Description Function
-window.toggleDesc = function(btn, descId) {
-    const descElement = document.getElementById(descId);
-    
-    // Toggle the 'expanded' class
-    if (descElement.classList.contains('expanded')) {
-        descElement.classList.remove('expanded');
-        btn.textContent = 'View more';
-    } else {
-        descElement.classList.add('expanded');
-        btn.textContent = 'View less';
-    }
-};
-
-// Toggle Description Function
-window.toggleDesc = function(btn, descId) {
-    const descElement = document.getElementById(descId);
-    if (descElement.classList.contains('truncated')) {
-        descElement.classList.remove('truncated');
-        btn.textContent = 'Read less';
-    } else {
-        descElement.classList.add('truncated');
-        btn.textContent = 'Read more';
     }
 };
 
@@ -203,8 +168,7 @@ window.editProject = function(docId) {
             const proj = doc.data();
             projTitle.value = proj.title;
             projDesc.value = proj.desc;
-            // Note: We can't pre-fill a file input for security reasons, so we leave it blank for re-upload or you can add a note.
-            projImageFile.value = ''; 
+            projImageFile.value = '';
             editDocId = docId;
             formTitle.textContent = 'Edit Project';
             saveProjBtn.textContent = 'Update Project';
@@ -222,11 +186,10 @@ cancelEditBtn.addEventListener('click', () => {
     uploadStatus.style.display = 'none';
 });
 
-// SAVE (ADD OR UPDATE) PROJECT WITH IMGBB UPLOAD (MULTIPLE IMAGES SUPPORT)
 saveProjBtn.addEventListener('click', async () => {
     const title = projTitle.value.trim();
     const desc = projDesc.value.trim();
-    const files = projImageFile.files; // Get all selected files
+    const files = projImageFile.files;
 
     if (!title || !desc) { alert('Please fill in the title and description.'); return; }
 
@@ -235,7 +198,6 @@ saveProjBtn.addEventListener('click', async () => {
 
     let imageUrls = [];
 
-    // If editing and no new files are selected, keep the old images
     if (editDocId && files.length === 0) {
         const doc = await db.collection("projects").doc(editDocId).get();
         if (doc.exists) {
@@ -243,24 +205,19 @@ saveProjBtn.addEventListener('click', async () => {
         }
     }
 
-    // If new files are selected, upload them to ImgBB one by one
     if (files.length > 0) {
         uploadStatus.style.display = 'block';
-
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
             uploadStatus.textContent = `Uploading image ${i + 1} of ${files.length}...`;
-
             const formData = new FormData();
             formData.append('image', file);
-
             try {
                 const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
                     method: 'POST',
                     body: formData
                 });
                 const data = await response.json();
-
                 if (data.success) {
                     imageUrls.push(data.data.url);
                 } else {
@@ -271,7 +228,7 @@ saveProjBtn.addEventListener('click', async () => {
                 saveProjBtn.textContent = editDocId ? 'Update Project' : 'Add Project';
                 saveProjBtn.disabled = false;
                 uploadStatus.style.display = 'none';
-                return; // Stop the process if one fails
+                return;
             }
         }
         uploadStatus.textContent = 'All images uploaded successfully!';
@@ -287,7 +244,7 @@ saveProjBtn.addEventListener('click', async () => {
 
     const projectData = { 
         title, 
-        images: imageUrls, // Save the array of multiple URLs
+        images: imageUrls,
         desc, 
         timestamp: firebase.firestore.FieldValue.serverTimestamp() 
     };
