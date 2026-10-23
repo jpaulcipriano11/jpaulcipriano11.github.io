@@ -109,6 +109,7 @@ function loadProjects() {
             const card = document.createElement('div');
             card.className = 'project-card glass-card fade-in visible';
             
+            // 1. Build Images HTML
             let imagesHtml = '';
             if (images.length > 0) {
                 const gridClass = images.length === 1 ? 'project-images-grid single-image' : 'project-images-grid';
@@ -119,16 +120,17 @@ function loadProjects() {
                 imagesHtml += `</div>`;
             }
 
-            // --- NEW DESCRIPTION LOGIC ---
-            let descHtml = `<p class="project-desc truncated" id="desc-${doc.id}">${proj.desc}</p>`;
+            // 2. Build Description and Button HTML
+            // Note: We do NOT add a 'truncated' class here. The CSS handles truncation by default!
+            let descHtml = `<p class="project-desc" id="desc-${doc.id}">${proj.desc}</p>`;
             let btnHtml = '';
             
-            // Only show the button if the description is longer than 120 characters
-            if (proj.desc && proj.desc.length > 120) {
-                btnHtml = `<button class="read-more-btn" onclick="toggleDesc(this, 'desc-${doc.id}')">Read more</button>`;
+            // Always show the button if the text is longer than 100 characters
+            if (proj.desc && proj.desc.length > 100) {
+                btnHtml = `<button class="read-more-btn" onclick="toggleDesc(this, 'desc-${doc.id}')">View more</button>`;
             }
-            // -----------------------------
 
+            // 3. Put it all together
             card.innerHTML = `${imagesHtml}<h3>${proj.title}</h3>${descHtml}${btnHtml}`;
             projectsGrid.appendChild(card);
         });
@@ -137,6 +139,20 @@ function loadProjects() {
         projectsGrid.innerHTML = '<p style="text-align:center; grid-column: 1/-1; color: #ef4444;">Error loading projects. Check console.</p>';
     });
 }
+
+// Toggle Description Function
+window.toggleDesc = function(btn, descId) {
+    const descElement = document.getElementById(descId);
+    
+    // Toggle the 'expanded' class
+    if (descElement.classList.contains('expanded')) {
+        descElement.classList.remove('expanded');
+        btn.textContent = 'View more';
+    } else {
+        descElement.classList.add('expanded');
+        btn.textContent = 'View less';
+    }
+};
 
 // Toggle Description Function
 window.toggleDesc = function(btn, descId) {
