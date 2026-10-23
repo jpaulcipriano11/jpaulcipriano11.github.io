@@ -307,7 +307,27 @@ document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && lightbox
 document.addEventListener('DOMContentLoaded', () => { loadProjects(); type(); });
 
 document.getElementById('contactForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    alert('Thank you for your message! (Connect to Formspree/EmailJS for real emails).');
-    this.reset();
+    e.preventDefault(); // Prevent the page from reloading
+
+    // 1. Get the values the user typed
+    const name = document.getElementById('contactName').value.trim();
+    const email = document.getElementById('contactEmail').value.trim();
+    const message = document.getElementById('contactMessage').value.trim();
+
+    // 2. Your email address
+    const myEmail = "jpaulcipriano@gmail.com";
+
+    // 3. Format the email subject and body
+    const subject = `Portfolio Contact from ${name}`;
+    const bodyText = `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`;
+
+    // 4. Create the mailto link (encodeURIComponent ensures spaces and line breaks work perfectly)
+    const mailtoLink = `mailto:${myEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyText)}`;
+
+    // 5. Open their default email app
+    window.location.href = mailtoLink;
+
+    // 6. Show a quick confirmation and clear the form
+    alert("Your email app should have opened! If it didn't, please email me directly at " + myEmail);
+    this.reset(); 
 });
