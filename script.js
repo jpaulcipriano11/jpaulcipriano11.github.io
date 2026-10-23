@@ -121,11 +121,11 @@ function loadProjects() {
             }
 
             // 2. Build Description and Button HTML
-            // Note: We do NOT add a 'truncated' class here. The CSS handles truncation by default!
+            // CSS handles truncation by default, so we just add the 'expanded' class when clicked
             let descHtml = `<p class="project-desc" id="desc-${doc.id}">${proj.desc}</p>`;
             let btnHtml = '';
             
-            // Always show the button if the text is longer than 100 characters
+            // Show button if text is long enough
             if (proj.desc && proj.desc.length > 100) {
                 btnHtml = `<button class="read-more-btn" onclick="toggleDesc(this, 'desc-${doc.id}')">View more</button>`;
             }
@@ -139,6 +139,20 @@ function loadProjects() {
         projectsGrid.innerHTML = '<p style="text-align:center; grid-column: 1/-1; color: #ef4444;">Error loading projects. Check console.</p>';
     });
 }
+
+// Toggle Description Function
+window.toggleDesc = function(btn, descId) {
+    const descElement = document.getElementById(descId);
+    
+    // Toggle the 'expanded' class
+    if (descElement.classList.contains('expanded')) {
+        descElement.classList.remove('expanded');
+        btn.textContent = 'View more';
+    } else {
+        descElement.classList.add('expanded');
+        btn.textContent = 'View less';
+    }
+};
 
 // Toggle Description Function
 window.toggleDesc = function(btn, descId) {

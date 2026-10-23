@@ -479,20 +479,22 @@ body:hover .cursor-glow { opacity: 1; }
     .timeline-dot, .timeline-item:nth-child(even) .timeline-dot { left: 12px; right: auto; }
 }
 
-/* === Project Description Truncation (Bulletproof) === */
+/* === Project Description Truncation (FINAL FIX) === */
 .project-desc {
     color: var(--text-secondary);
     font-size: 0.95rem;
     margin-bottom: 10px;
     line-height: 1.5;
     
-    /* FORCE Truncation by default */
+    /* FORCE truncation by default */
     display: -webkit-box;
-    -webkit-line-clamp: 3; 
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-height: 4.5em; 
+    max-height: 4.5em;
+    
+    /* NO TRANSITION HERE - it breaks line-clamp! */
 }
 
 /* When expanded, remove limits */
@@ -500,6 +502,7 @@ body:hover .cursor-glow { opacity: 1; }
     display: block;
     -webkit-line-clamp: unset;
     max-height: none;
+    overflow: visible;
 }
 
 /* The "View more" button styling */
@@ -514,7 +517,6 @@ body:hover .cursor-glow { opacity: 1; }
     margin-top: -5px;
     margin-bottom: 15px;
     display: inline-block;
-    transition: color 0.3s;
     font-family: 'Inter', sans-serif;
 }
 
