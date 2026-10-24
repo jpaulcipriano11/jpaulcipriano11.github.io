@@ -17,6 +17,13 @@ const db = firebase.firestore();
 // ==========================================
 const IMGBB_API_KEY = "d2f5e9da99064c41bdf0f8feafd5d741";
 
+// Helper function to extract YouTube Video ID from any YouTube URL
+function getYouTubeID(url) {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+}
+
 // ==========================================
 // 3. UI ANIMATIONS & TYPING EFFECT
 // ==========================================
@@ -115,13 +122,28 @@ function loadProjects() {
                 imagesHtml += `</div>`;
             }
 
-            let descHtml = `<p class="project-desc truncated" id="desc-${doc.id}">${proj.desc}</p>`;
+                     // 1. Build Video HTML if a YouTube ID exists
+         let videoHtml = '';
+         if (proj.videoId) {
+             videoHtml = `
+                <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--glass-border);">
+                    <iframe src="https://www.youtube.com/embed/${proj.videoId}" 
+                            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen>
+                    </iframe>
+                </div>
+             `;
+         }
+
+         // 2. Build Description HTML
+         let descHtml = `<p class="project-desc truncated" id="desc-${doc.id}">${proj.desc}</p>`;
             let btnHtml = '';
             if (proj.desc && proj.desc.length > 120) {
                 btnHtml = `<button class="read-more-btn" onclick="toggleDesc(this, 'desc-${doc.id}')">Read more</button>`;
             }
 
-            card.innerHTML = `${imagesHtml}<h3>${proj.title}</h3>${descHtml}${btnHtml}`;
+                     card.innerHTML = `${videoHtml}${imagesHtml}<h3>${proj.title}</h3>${descHtml}${btnHtml}`;
             projectsGrid.appendChild(card);
         });
     }).catch((error) => {
@@ -164,6 +186,13 @@ window.editProject = function(docId) {
             const proj = doc.data();
             projTitle.value = proj.title;
             projDesc.value = proj.desc;
+            
+            // Reconstruct the full YouTube URL for the input field
+            const videoInput = document.getElementById('projVideo');
+            if (videoInput) {
+                videoInput.value = proj.videoId ? `https://www.youtube.com/watch?v=${proj.videoId}` : '';
+            }
+            
             projImageFile.value = '';
             editDocId = docId;
             formTitle.textContent = 'Edit Project';
@@ -229,7 +258,17 @@ saveProjBtn.addEventListener('click', async () => {
         return;
     }
 
-    const projectData = { title, images: imageUrls, desc, timestamp: firebase.firestore.FieldValue.serverTimestamp() };
+        // Get video URL and extract ID
+    const videoUrl = document.getElementById('projVideo').value.trim();
+    const videoId = videoUrl ? getYouTubeID(videoUrl) : null;
+
+    const projectData = { 
+        title, 
+        images: imageUrls, 
+        desc, 
+        videoId: videoId, // Save the YouTube ID to Firebase
+        timestamp: firebase.firestore.FieldValue.serverTimestamp() 
+    };
     uploadStatus.textContent = 'Saving to database...';
 
     if (editDocId) {
