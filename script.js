@@ -1,5 +1,5 @@
 // ==========================================
-// 1. FIREBASE CONFIGURATION
+// 1. FIREBASE & API CONFIGURATION
 // ==========================================
 const firebaseConfig = {
     apiKey: "AIzaSyDMSgb-0uvwkgghI_VViWhbMhgMcvd4O74",
@@ -11,21 +11,20 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
-
-// ==========================================
-// 2. IMGBB API CONFIGURATION
-// ==========================================
 const IMGBB_API_KEY = "d2f5e9da99064c41bdf0f8feafd5d741";
 
-// Helper function to extract YouTube Video ID from any YouTube URL
-function getYouTubeID(url) {
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-    const match = url.match(regExp);
-    return (match && match[2].length === 11) ? match[2] : null;
+// Helper function to convert YouTube/Vimeo links to embed URLs
+function getVideoEmbedUrl(url) {
+    if (!url) return null;
+    const ytMatch = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
+    if (ytMatch) return `https://www.youtube.com/embed/${ytMatch[1]}`;
+    const vimeoMatch = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+    if (vimeoMatch) return `https://player.vimeo.com/video/${vimeoMatch[1]}`;
+    return null;
 }
 
 // ==========================================
-// 3. UI ANIMATIONS & TYPING EFFECT
+// 2. UI ANIMATIONS & TYPING EFFECT
 // ==========================================
 const typedTextElement = document.getElementById('typed-text');
 const textArray = ["Customer Service Rep", "Technical Support Specialist", "Web Developer", "Problem Solver"];
@@ -44,7 +43,7 @@ function type() {
 
 const cursorGlow = document.getElementById('cursorGlow');
 if (window.matchMedia("(pointer: fine)").matches) {
-    document.addEventListener('mousemove', (e) => { cursorGlow.style.left = e.clientX + 'px'; cursorGlow.style.top = e.clientY + 'px'; });
+    document.addEventListener('mousemove', (e) => { cursorGlow.style.left = e.clientX + 'px'; cursorGlow.style.top = e.clientY + 'px'; }, { passive: true });
 }
 
 const observer = new IntersectionObserver((entries) => {
@@ -58,7 +57,7 @@ menuToggle.addEventListener('click', () => { navLinks.classList.toggle('active')
 document.querySelectorAll('.nav-links a').forEach(link => { link.addEventListener('click', () => { navLinks.classList.remove('active'); }); });
 
 // ==========================================
-// 4. ADMIN PANEL LOGIC
+// 3. ADMIN PANEL LOGIC
 // ==========================================
 const adminModal = document.getElementById('adminModal');
 const adminTrigger = document.getElementById('adminTrigger');
@@ -85,12 +84,13 @@ loginBtn.addEventListener('click', () => {
 });
 
 // ==========================================
-// 5. PROJECTS & IMGBB UPLOAD MANAGEMENT
+// 4. PROJECTS & IMGBB UPLOAD MANAGEMENT
 // ==========================================
 let editDocId = null;
 const projTitle = document.getElementById('projTitle');
 const projImageFile = document.getElementById('projImageFile');
 const projDesc = document.getElementById('projDesc');
+const projVideo = document.getElementById('projVideo'); // NEW VIDEO INPUT
 const saveProjBtn = document.getElementById('saveProjBtn');
 const cancelEditBtn = document.getElementById('cancelEditBtn');
 const formTitle = document.getElementById('formTitle');
@@ -100,20 +100,32 @@ const uploadStatus = document.getElementById('uploadStatus');
 
 function loadProjects() {
     projectsGrid.innerHTML = '<p style="text-align:center; grid-column: 1/-1; color: var(--text-secondary);">Loading projects from cloud...</p>';
-    
     db.collection("projects").orderBy("timestamp", "desc").get().then((querySnapshot) => {
         projectsGrid.innerHTML = '';
         if (querySnapshot.empty) {
             projectsGrid.innerHTML = '<p style="text-align:center; grid-column: 1/-1; color: var(--text-secondary);">No projects added yet. Use the Admin panel to add some!</p>';
             return;
         }
-
         querySnapshot.forEach((doc) => {
             const proj = doc.data();
             const images = proj.images || [];
             const card = document.createElement('div');
             card.className = 'project-card glass-card fade-in visible';
             
+            // 1. Build Video HTML if URL exists
+            let videoHtml = '';
+            if (proj.videoUrl) {
+                const embedUrl = getVideoEmbedUrl(proj.videoUrl);
+                if (embedUrl) {
+                    videoHtml = `
+                        <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--glass-border);">
+                            <iframe src="${embedUrl}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                    `;
+                }
+            }
+
+            // 2. Build Images HTML
             let imagesHtml = '';
             if (images.length > 0) {
                 const gridClass = images.length === 1 ? 'project-images-grid single-image' : 'project-images-grid';
@@ -124,16 +136,15 @@ function loadProjects() {
                 imagesHtml += `</div>`;
             }
 
-            // CSS handles truncation by default. We only add the 'expanded' class when clicked.
+            // 3. Build Description and Button HTML
             let descHtml = `<p class="project-desc" id="desc-${doc.id}">${proj.desc}</p>`;
             let btnHtml = '';
-            
-            // Show button if text is long enough
             if (proj.desc && proj.desc.length > 120) {
                 btnHtml = `<button class="read-more-btn" onclick="toggleDesc(this, 'desc-${doc.id}')">Read more</button>`;
             }
 
-            card.innerHTML = `${imagesHtml}<h3>${proj.title}</h3>${descHtml}${btnHtml}`;
+            // 4. Put it all together
+            card.innerHTML = `${videoHtml}${imagesHtml}<h3>${proj.title}</h3>${descHtml}${btnHtml}`;
             projectsGrid.appendChild(card);
         });
     }).catch((error) => {
@@ -142,11 +153,9 @@ function loadProjects() {
     });
 }
 
-// Toggle Description Function
+// Toggle Description Function (BULLETPROOF)
 window.toggleDesc = function(btn, descId) {
     const descElement = document.getElementById(descId);
-    
-    // Toggle the 'expanded' class
     if (descElement.classList.contains('expanded')) {
         descElement.classList.remove('expanded');
         btn.textContent = 'Read more';
@@ -179,13 +188,8 @@ window.editProject = function(docId) {
             const proj = doc.data();
             projTitle.value = proj.title;
             projDesc.value = proj.desc;
-            
-            // Reconstruct the full YouTube URL for the input field
-            const videoInput = document.getElementById('projVideo');
-            if (videoInput) {
-                videoInput.value = proj.videoId ? `https://www.youtube.com/watch?v=${proj.videoId}` : '';
-            }
-            
+            // Load the video URL into the input box
+            if (projVideo) projVideo.value = proj.videoUrl || '';
             projImageFile.value = '';
             editDocId = docId;
             formTitle.textContent = 'Edit Project';
@@ -198,6 +202,7 @@ window.editProject = function(docId) {
 cancelEditBtn.addEventListener('click', () => {
     editDocId = null;
     projTitle.value = ''; projImageFile.value = ''; projDesc.value = '';
+    if (projVideo) projVideo.value = '';
     formTitle.textContent = 'Add New Project';
     saveProjBtn.textContent = 'Add Project';
     cancelEditBtn.style.display = 'none';
@@ -208,6 +213,7 @@ saveProjBtn.addEventListener('click', async () => {
     const title = projTitle.value.trim();
     const desc = projDesc.value.trim();
     const files = projImageFile.files;
+    const videoUrl = projVideo ? projVideo.value.trim() : '';
 
     if (!title || !desc) { alert('Please fill in the title and description.'); return; }
 
@@ -251,17 +257,14 @@ saveProjBtn.addEventListener('click', async () => {
         return;
     }
 
-        // Get video URL and extract ID
-    const videoUrl = document.getElementById('projVideo').value.trim();
-    const videoId = videoUrl ? getYouTubeID(videoUrl) : null;
-
     const projectData = { 
         title, 
         images: imageUrls, 
         desc, 
-        videoId: videoId, // Save the YouTube ID to Firebase
+        videoUrl: videoUrl, // Save the raw URL to Firebase
         timestamp: firebase.firestore.FieldValue.serverTimestamp() 
     };
+
     uploadStatus.textContent = 'Saving to database...';
 
     if (editDocId) {
@@ -274,6 +277,7 @@ saveProjBtn.addEventListener('click', async () => {
         db.collection("projects").add(projectData).then(() => {
             alert('Project added successfully!');
             projTitle.value = ''; projImageFile.value = ''; projDesc.value = '';
+            if (projVideo) projVideo.value = '';
             loadProjects(); loadAdminProjects();
         }).catch((error) => { alert('Error adding: ' + error.message); });
     }
@@ -295,7 +299,7 @@ window.deleteProject = function(docId) {
 }
 
 // ==========================================
-// 6. LIGHTBOX LOGIC
+// 5. LIGHTBOX LOGIC
 // ==========================================
 const lightbox = document.getElementById('lightbox');
 const lightboxImg = document.getElementById('lightboxImg');
@@ -312,22 +316,20 @@ if (lightbox) { lightbox.addEventListener('click', (e) => { if (e.target === lig
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && lightbox && lightbox.style.display === 'flex') { closeLightboxFunc(); } });
 
 // ==========================================
-// 7. INITIAL LOAD & CONTACT FORM (EMAILJS)
+// 6. INITIAL LOAD & CONTACT FORM (EMAILJS)
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => { loadProjects(); type(); });
 
 document.getElementById('contactForm').addEventListener('submit', function(event) {
     event.preventDefault();
-    
     const btn = this.querySelector('button');
     const originalText = btn.innerHTML;
-    
     btn.innerHTML = 'Sending... <i class="fas fa-spinner fa-spin"></i>';
     btn.disabled = true;
-
-    // ⚠️ REPLACE THESE WITH YOUR ACTUAL EMAILJS IDs FROM THE DASHBOARD
-    const serviceID = 'service_wxmu6km'; 
-    const templateID = 'template_s5wn5qc'; 
+    
+    // ️ REPLACE WITH YOUR ACTUAL EMAILJS SERVICE ID AND TEMPLATE ID
+    const serviceID = 'YOUR_SERVICE_ID'; 
+    const templateID = 'YOUR_TEMPLATE_ID'; 
 
     emailjs.sendForm(serviceID, templateID, this)
         .then(() => {
