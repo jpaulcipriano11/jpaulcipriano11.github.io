@@ -474,10 +474,11 @@ body:hover .cursor-glow { opacity: 1; }
     .timeline-dot, .timeline-item:nth-child(even) .timeline-dot { left: 12px; right: auto; }
 }
 
-/* === Project Description Truncation (ROBUST FIX) === */
+/* === Project Description Truncation (BULLETPROOF) === */
 .project-desc {
     color: var(--text-secondary);
     font-size: 0.95rem;
+    flex-grow: 1;
     margin-bottom: 10px;
     line-height: 1.5;
     
@@ -487,12 +488,12 @@ body:hover .cursor-glow { opacity: 1; }
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-height: 4.5em;
+    max-height: 4.5em; /* 1.5em line-height * 3 lines */
     
     /* NO TRANSITION HERE - it breaks line-clamp toggling! */
 }
 
-/* When expanded, remove limits */
+/* When expanded, completely remove the truncation limits */
 .project-desc.expanded {
     display: block;
     -webkit-line-clamp: unset;
@@ -500,7 +501,7 @@ body:hover .cursor-glow { opacity: 1; }
     overflow: visible;
 }
 
-/* The "View more" button styling */
+/* The "Read more" button styling */
 .read-more-btn {
     background: none;
     border: none;
@@ -509,8 +510,7 @@ body:hover .cursor-glow { opacity: 1; }
     font-size: 0.85rem;
     font-weight: 600;
     padding: 0;
-    margin-top: -5px;
-    margin-bottom: 15px;
+    margin-top: 5px;
     display: inline-block;
     font-family: 'Inter', sans-serif;
 }

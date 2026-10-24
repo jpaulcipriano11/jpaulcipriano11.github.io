@@ -100,12 +100,14 @@ const uploadStatus = document.getElementById('uploadStatus');
 
 function loadProjects() {
     projectsGrid.innerHTML = '<p style="text-align:center; grid-column: 1/-1; color: var(--text-secondary);">Loading projects from cloud...</p>';
+    
     db.collection("projects").orderBy("timestamp", "desc").get().then((querySnapshot) => {
         projectsGrid.innerHTML = '';
         if (querySnapshot.empty) {
             projectsGrid.innerHTML = '<p style="text-align:center; grid-column: 1/-1; color: var(--text-secondary);">No projects added yet. Use the Admin panel to add some!</p>';
             return;
         }
+
         querySnapshot.forEach((doc) => {
             const proj = doc.data();
             const images = proj.images || [];
@@ -122,28 +124,16 @@ function loadProjects() {
                 imagesHtml += `</div>`;
             }
 
-                     // 1. Build Video HTML if a YouTube ID exists
-         let videoHtml = '';
-         if (proj.videoId) {
-             videoHtml = `
-                <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--glass-border);">
-                    <iframe src="https://www.youtube.com/embed/${proj.videoId}" 
-                            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" 
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                            allowfullscreen>
-                    </iframe>
-                </div>
-             `;
-         }
-
-         // 2. Build Description HTML
-         let descHtml = `<p class="project-desc truncated" id="desc-${doc.id}">${proj.desc}</p>`;
+            // CSS handles truncation by default. We only add the 'expanded' class when clicked.
+            let descHtml = `<p class="project-desc" id="desc-${doc.id}">${proj.desc}</p>`;
             let btnHtml = '';
+            
+            // Show button if text is long enough
             if (proj.desc && proj.desc.length > 120) {
                 btnHtml = `<button class="read-more-btn" onclick="toggleDesc(this, 'desc-${doc.id}')">Read more</button>`;
             }
 
-                     card.innerHTML = `${videoHtml}${imagesHtml}<h3>${proj.title}</h3>${descHtml}${btnHtml}`;
+            card.innerHTML = `${imagesHtml}<h3>${proj.title}</h3>${descHtml}${btnHtml}`;
             projectsGrid.appendChild(card);
         });
     }).catch((error) => {
@@ -152,14 +142,17 @@ function loadProjects() {
     });
 }
 
+// Toggle Description Function
 window.toggleDesc = function(btn, descId) {
     const descElement = document.getElementById(descId);
-    if (descElement.classList.contains('truncated')) {
-        descElement.classList.remove('truncated');
-        btn.textContent = 'Read less';
-    } else {
-        descElement.classList.add('truncated');
+    
+    // Toggle the 'expanded' class
+    if (descElement.classList.contains('expanded')) {
+        descElement.classList.remove('expanded');
         btn.textContent = 'Read more';
+    } else {
+        descElement.classList.add('expanded');
+        btn.textContent = 'Read less';
     }
 };
 
