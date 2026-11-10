@@ -344,3 +344,95 @@ document.getElementById('contactForm').addEventListener('submit', function(event
             console.log('EmailJS FAILED...', err);
         });
 });
+
+// ==========================================
+// 7. CONSTELLATION BACKGROUND (floating tech icons + dashed links)
+// ==========================================
+(function () {
+  const host = document.getElementById('constellation');
+  if (!host) return;
+
+  // Muted, earth-tone brand colors matched to the Brand Kit
+  const NODES = [
+    { icon: 'fab fa-react',     color: '#4a6b7c', size: 46, x: 12, y: 26 },
+    { icon: 'fab fa-html5',     color: '#8a4b3a', size: 44, x: 51, y: 16 },
+    { icon: 'fab fa-css3-alt',  color: '#3e5c6b', size: 40, x: 16, y: 52 },
+    { icon: 'fab fa-square-js', color: '#44543c', size: 42, x: 84, y: 21 },
+    { icon: 'fab fa-git-alt',   color: '#7a4034', size: 38, x: 14, y: 84 },
+    { icon: 'fab fa-github',    color: '#2b2a27', size: 40, x: 66, y: 90 },
+    { icon: 'fab fa-node-js',   color: '#3f5a41', size: 42, x: 91, y: 76 },
+    { icon: 'fab fa-wordpress', color: '#3e5c6b', size: 40, x: 72, y: 62 },
+    { icon: 'fab fa-npm',       color: '#7a4034', size: 38, x: 40, y: 84 }
+  ];
+
+  // which icons the dashed lines connect
+  const LINKS = [[0,1],[1,3],[0,2],[2,4],[4,8],[8,5],[5,6],[6,7],[3,7]];
+
+  const svgNS = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(svgNS, 'svg');
+  host.appendChild(svg);
+
+  const lines = LINKS.map(() => {
+    const l = document.createElementNS(svgNS, 'line');
+    l.setAttribute('stroke', 'rgba(26,25,22,0.28)');
+    l.setAttribute('stroke-width', '1');
+    l.setAttribute('stroke-dasharray', '3 7');
+    svg.appendChild(l);
+    return l;
+  });
+
+  const nodes = NODES.map(cfg => {
+    const el = document.createElement('span');
+    el.className = 'node';
+    el.innerHTML = `<i class="${cfg.icon}" style="font-size:${cfg.size}px;color:${cfg.color}"></i>`;
+    host.appendChild(el);
+    return {
+      el,
+      x: cfg.x / 100, y: cfg.y / 100,
+      vx: (Math.random() * 0.010 + 0.005) * (Math.random() < .5 ? -1 : 1),
+      vy: (Math.random() * 0.010 + 0.005) * (Math.random() < .5 ? -1 : 1),
+      depth: Math.random() * 0.5 + 0.2   // parallax strength
+    };
+  });
+
+  let W = 0, H = 0, mx = 0, my = 0, cmx = 0, cmy = 0;
+  const measure = () => { W = host.clientWidth; H = host.clientHeight; };
+  measure();
+  window.addEventListener('resize', measure);
+  window.addEventListener('mousemove', e => {
+    mx = e.clientX / window.innerWidth - 0.5;
+    my = e.clientY / window.innerHeight - 0.5;
+  }, { passive: true });
+
+  function draw() {
+    const pts = nodes.map(n => [n.x * W + cmx * n.depth * 40, n.y * H + cmy * n.depth * 40]);
+    nodes.forEach((n, i) => {
+      n.el.style.transform = `translate3d(${pts[i][0]}px, ${pts[i][1]}px, 0) translate(-50%, -50%)`;
+    });
+    LINKS.forEach(([a, b], i) => {
+      const l = lines[i];
+      l.setAttribute('x1', pts[a][0]); l.setAttribute('y1', pts[a][1]);
+      l.setAttribute('x2', pts[b][0]); l.setAttribute('y2', pts[b][1]);
+    });
+  }
+
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  draw();
+  if (reduced) return; // static constellation for reduced-motion users
+
+  let last = performance.now();
+  function tick(now) {
+    const dt = Math.min((now - last) / 1000, 0.05);
+    last = now;
+    cmx += (mx - cmx) * 0.05;  // smooth parallax
+    cmy += (my - cmy) * 0.05;
+    nodes.forEach(n => {
+      n.x += n.vx * dt; n.y += n.vy * dt;
+      if (n.x < 0.05 || n.x > 0.95) n.vx *= -1;
+      if (n.y < 0.08 || n.y > 0.92) n.vy *= -1;
+    });
+    draw();
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();
