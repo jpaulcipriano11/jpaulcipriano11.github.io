@@ -1,209 +1,371 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paul's Portfolio | Customer Service & Technical Support</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paul — Customer Service · Technical Support · Web Development</title>
+<meta name="description" content="Paul is a customer service and technical support professional with 12+ years of experience who also designs and builds working websites.">
+<meta name="theme-color" content="#0A0D14">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="style.css">
+<script>
+(function(){try{var t=localStorage.getItem('paul-theme');if(t!=='light'&&t!=='dark'){t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';}document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+</script>
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div id="scrollProgress" aria-hidden="true"></div>
+<div class="aurora" aria-hidden="true"><i class="a1"></i><i class="a2"></i><i class="a3"></i></div>
+<div class="grain" aria-hidden="true"></div>
+<div id="cursorGlow" aria-hidden="true"></div>
 
-    <div class="bg-orbs"><div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div></div>
-    <div class="cursor-glow" id="cursorGlow"></div>
-
-    <nav class="navbar">
-        <div class="container nav-container">
-            <a href="#home" class="logo">Paul<span class="gradient-text">.</span></a>
-            <ul class="nav-links" id="navLinks">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#work">Work</a></li>
-                <li><a href="#projects">Projects</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#skills">Skills</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-            <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
-        </div>
+<header class="navbar" id="navbar">
+  <div class="container nav-container">
+    <a href="#home" class="logo">PAUL<span class="logo-dot">.</span><span class="logo-sub mono">/ support &amp; web</span></a>
+    <nav class="nav-links" id="navLinks" aria-label="Primary">
+      <a href="#work">Work</a>
+      <a href="#projects">Projects</a>
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#contact">Contact</a>
+      <a href="#contact" class="btn btn-primary btn-sm nav-cta">Start a project</a>
     </nav>
+    <div class="nav-actions">
+      <button id="themeToggle" class="theme-toggle" aria-label="Switch color theme" title="Toggle dark / light mode">
+        <i class="fas fa-sun" aria-hidden="true"></i><i class="fas fa-moon" aria-hidden="true"></i>
+      </button>
+      <button id="menuToggle" class="menu-toggle" aria-label="Open menu" aria-expanded="false"><i class="fas fa-bars" aria-hidden="true"></i></button>
+    </div>
+  </div>
+</header>
 
-    <section id="home" class="hero">
-        <div class="constellation" id="constellation" aria-hidden="true"></div>
-        <div class="container hero-content">
-            <div class="hero-text fade-in">
-                <h3 class="greeting">Welcome to my portfolio</h3>
-                <h1>Hi, I'm <span class="gradient-text">Paul</span></h1>
-                <h2 class="typing-wrapper">I am a <span id="typed-text" class="gradient-text"></span><span class="cursor-blink">|</span></h2>
-                <p>Providing exceptional customer service and technical support with a focus on problem-solving, client satisfaction, and seamless digital experiences.</p>
-                <div class="hero-btns">
-                    <a href="#work" class="btn btn-primary">View My Work <i class="fas fa-arrow-right"></i></a>
-                    <a href="#contact" class="btn btn-secondary">Contact Me</a>
-                </div>
-            </div>
-            <div class="hero-image fade-in">
-                <div class="image-glow"></div>
-                <img src="https://huggingface.co/spaces/jpaulcipriano11/pixelperfect-portfolio-pro/resolve/main/images/Resume%20Picture.png" alt="Paul">
-            </div>
-        </div>
-    </section>
+<main id="main">
 
-    <section id="work" class="section">
-        <div class="container">
-            <h2 class="section-title fade-in">Work <span class="gradient-text">Experience</span></h2>
-            <p class="section-subtitle fade-in">My professional journey in customer service and technical support</p>
-            <div class="timeline">
-                <div class="timeline-item fade-in">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-content glass-card">
-                        <h3>KCTV</h3><h4>Customer Service Representative</h4>
-                        <ul><li>Handled customer inquiries and complaints via phone and email</li><li>Resolved billing issues and service interruptions</li><li>Managed customer accounts and service upgrades</li><li>Maintained 95%+ customer satisfaction rating</li></ul>
-                    </div>
-                </div>
-                <div class="timeline-item fade-in">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-content glass-card">
-                        <h3>AT&T / DirecTV</h3><h4>Customer Service Representative</h4>
-                        <ul><li>Assisted customers with TV, internet and phone services</li><li>Troubleshot technical issues with satellite receivers</li><li>Processed orders and scheduled technician visits</li><li>Consistently exceeded performance metrics</li></ul>
-                    </div>
-                </div>
-                <div class="timeline-item fade-in">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-content glass-card">
-                        <h3>Samsung</h3><h4>Mobile Devices Technical Support</h4>
-                        <ul><li>Provided technical support for smartphones and tablets</li><li>Diagnosed hardware and software issues</li><li>Guided customers through troubleshooting steps</li><li>Documented and escalated unresolved issues</li></ul>
-                    </div>
-                </div>
-                <div class="timeline-item fade-in">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-content glass-card">
-                        <h3>Kalibo Cable Television Network, Inc.</h3><h4>Video Editor & Videographer</h4>
-                        <ul><li>Filmed clients, places, and establishments for various broadcast and promotional purposes</li><li>Edited videos using Adobe Premiere Pro and CapCut for professional delivery</li><li>Created dynamic animations and visual effects using Adobe After Effects</li><li>Managed end-to-end video production from filming to final export</li><li>Enhanced video quality through color grading, transitions, and motion graphics</li></ul>
-                    </div>
-                </div>
-                <div class="timeline-item fade-in">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-content glass-card">
-                        <h3>Freelance</h3><h4>Web Design & Development</h4>
-                        <ul><li>Designed and developed responsive websites</li><li>Provided technical support for web applications</li><li>Managed client communication and requirements</li><li>Implemented SEO and performance optimization</li></ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="projects" class="section bg-dark">
-        <div class="container">
-            <h2 class="section-title fade-in">My <span class="gradient-text">Projects</span></h2>
-            <p class="section-subtitle fade-in">A showcase of my web development and technical projects</p>
-            <div class="projects-grid" id="projectsGrid">
-                <p style="text-align:center; grid-column: 1/-1; color: var(--text-secondary);">Loading projects from cloud...</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="about" class="section">
-        <div class="container about-content">
-            <div class="about-text fade-in">
-                <h2 class="section-title">About <span class="gradient-text">Me</span></h2>
-                <p>I'm a dedicated Customer Service and Technical Support professional with over 12 years of experience helping customers resolve issues and improve their experience. My background includes technical support for mobile devices and web development.</p>
-                <p>I specialize in troubleshooting complex issues, explaining technical concepts clearly, and providing exceptional service. My approach combines technical knowledge with strong interpersonal skills to deliver solutions that satisfy customers.</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="skills" class="section bg-dark">
-        <div class="container">
-            <h2 class="section-title fade-in">Skills & <span class="gradient-text">Expertise</span></h2>
-            <p class="section-subtitle fade-in">The tools and technologies I use to bring ideas to life</p>
-            <div class="skills-grid">
-                <div class="skill-card glass-card fade-in"><div class="skill-icon"><i class="fas fa-headset"></i></div><h3>Customer Service</h3><p>Conflict resolution, Active listening, Empathy, Problem-solving</p></div>
-                <div class="skill-card glass-card fade-in"><div class="skill-icon"><i class="fas fa-tools"></i></div><h3>Technical Support</h3><p>Troubleshooting, Diagnostics, Hardware/Software support, Remote assistance</p></div>
-                <div class="skill-card glass-card fade-in"><div class="skill-icon"><i class="fas fa-phone-alt"></i></div><h3>Call Center</h3><p>CRM systems, Call handling, Quality assurance, Performance metrics</p></div>
-                <div class="skill-card glass-card fade-in"><div class="skill-icon"><i class="fas fa-code"></i></div><h3>Web Development</h3><p>HTML, CSS, JavaScript, WordPress, Technical troubleshooting</p></div>
-                <div class="skill-card glass-card fade-in"><div class="skill-icon"><i class="fas fa-comments"></i></div><h3>Communication</h3><p>Clear explanations, Documentation, Training, Multilingual support</p></div>
-            </div>
-        </div>
-    </section>
-
-    <section id="contact" class="section">
-        <div class="container">
-            <h2 class="section-title fade-in">Let's <span class="gradient-text">Work Together</span></h2>
-            <p class="section-subtitle fade-in">Have a project in mind or want to discuss potential opportunities? Get in touch!</p>
-            <div class="contact-wrapper">
-                <form class="contact-form glass-card fade-in" id="contactForm">
-                    <input type="text" name="user_name" placeholder="Your Name" required>
-                    <input type="email" name="user_email" placeholder="Email Address" required>
-                    <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
-                    <button type="submit" class="btn btn-primary">Send Message <i class="fas fa-paper-plane"></i></button>
-                </form>
-                <div class="contact-info fade-in">
-                    <div class="info-item glass-card"><i class="fas fa-envelope"></i><div><h4>Email</h4><p>jpaulcipriano@gmail.com</p></div></div>
-                    <div class="info-item glass-card"><i class="fas fa-phone"></i><div><h4>Phone</h4><p>+63 966 059 3695</p></div></div>
-                    <div class="info-item glass-card"><i class="fas fa-map-marker-alt"></i><div><h4>Location</h4><p>Numancia, PH</p></div></div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2023 Paul. All rights reserved.</p>
-            <a href="#" id="adminTrigger" class="admin-trigger">Admin</a>
-        </div>
-    </footer>
-
-    <div id="adminModal" class="modal">
-        <div class="modal-content glass-card">
-            <span class="close-btn" id="closeAdmin">&times;</span>
-            <h2>Admin <span class="gradient-text">Settings</span></h2>
-            <div id="adminLogin">
-                <p>Enter admin password to manage projects:</p>
-                <input type="password" id="adminPass" placeholder="Password" autocomplete="off">
-                <button class="btn btn-primary" id="loginBtn">Login</button>
-                <p class="hint">Hint: Default password is <code>paul2023</code></p>
-            </div>
-            <div id="adminDashboard" style="display:none;">
-                <h3 id="formTitle">Add New Project</h3>
-                <input type="text" id="projTitle" placeholder="Project Title">
-                <label style="display:block; margin: 15px 0 5px; color: var(--text-secondary); font-size: 0.9rem;">Upload Project Image(s):</label>
-                <input type="file" id="projImageFile" accept="image/*" multiple style="padding: 10px; background: rgba(255,255,255,0.05); border: 1px dashed var(--glass-border); border-radius: 10px; color: white; cursor: pointer; width: 100%;">
-                <p id="uploadStatus" style="font-size: 0.85rem; color: var(--accent-1); margin-top: 5px; display: none;">Uploading image...</p>
-                
-                <!-- NEW VIDEO INPUT FIELD -->
-                <input type="text" id="projVideo" placeholder="YouTube or Vimeo Video URL (optional)" style="margin-top: 10px;">
-                
-                <textarea id="projDesc" placeholder="Project Description" style="margin-top: 10px;"></textarea>
-                <div style="display: flex; gap: 10px; margin-top: 10px;">
-                    <button class="btn btn-primary" id="saveProjBtn">Add Project</button>
-                    <button class="btn btn-secondary" id="cancelEditBtn" style="display:none;">Cancel</button>
-                </div>
-                <h3 style="margin-top: 30px;">Manage Projects</h3>
-                <ul id="adminProjList"></ul>
-            </div>
-        </div>
+<!-- ============ HERO ============ -->
+<section id="home" class="hero">
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <p class="kicker mono rise"><i class="dot dot-green pulse"></i> WELCOME TO MY PORTFOLIO</p>
+      <h1 class="rise d1">From first ticket<br>to <em>working site.</em></h1>
+      <p class="typing-wrapper mono rise d2">Hi, I'm Paul — <span id="typed-text"></span><span class="cursor-blink">|</span></p>
+      <p class="lead rise d3">Providing exceptional customer service and technical support with a focus on problem-solving, client satisfaction, and seamless digital experiences.</p>
+      <div class="hero-btns rise d4">
+        <a href="#work" class="btn btn-primary">See my work <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+        <a href="#contact" class="btn btn-ghost">Start a project</a>
+      </div>
+      <ul class="hero-chips mono rise d5">
+        <li><i class="dot dot-green"></i> AVAILABLE FOR PROJECTS</li>
+        <li>NUMANCIA, PH → WORLDWIDE</li>
+        <li>12+ YEARS EXPERIENCE</li>
+      </ul>
     </div>
 
-    <div id="lightbox" class="lightbox">
-        <span class="close-btn" id="closeLightbox">&times;</span>
-        <img id="lightboxImg" src="" alt="Full size view">
+    <div class="scene rise d3">
+      <div class="scene-head mono">
+        <span>SCENE 01 · SUPPORT HEADSET</span>
+        <span class="live"><i class="dot dot-green pulse"></i> LIVE CANVAS</span>
+      </div>
+      <div class="scene-stage">
+        <canvas id="sceneCanvas" tabindex="0" aria-label="Interactive 3D headset. Drag to orbit, double-click to flip wireframe and rendered, arrow keys rotate, scroll to zoom."></canvas>
+        <div class="scene-mode mono" role="group" aria-label="Render mode">
+          <button id="modeWire" class="is-on" aria-pressed="true" type="button">WIREFRAME</button>
+          <button id="modeRender" aria-pressed="false" type="button">RENDERED</button>
+        </div>
+      </div>
+      <p class="scene-hint mono">DRAG TO ORBIT · DOUBLE-CLICK TO FLIP · ARROW KEYS WORK TOO</p>
+      <div class="scene-controls mono" aria-label="Scene controls">
+        <label class="ctl"><span>SPEED</span><input id="ctlSpeed" type="range" min="0" max="2" step="0.05" value="0.6"></label>
+        <label class="ctl"><span>ZOOM</span><input id="ctlZoom" type="range" min="0.7" max="1.6" step="0.01" value="1"></label>
+        <label class="ctl"><span>SIGNAL</span><input id="ctlSignal" type="range" min="0" max="120" step="1" value="60"></label>
+        <label class="ctl ctl-toggle"><span>GRID</span><input id="ctlGrid" type="checkbox" checked><i class="switch" aria-hidden="true"></i></label>
+        <label class="ctl ctl-toggle"><span>GLOW</span><input id="ctlGlow" type="checkbox" checked><i class="switch" aria-hidden="true"></i></label>
+        <button id="ctlReset" class="ctl-btn" type="button">⟲ RESET</button>
+        <button id="ctlExport" class="ctl-btn" type="button">↓ PNG</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track mono">
+    <span>CUSTOMER SERVICE ✦ TECHNICAL SUPPORT ✦ TROUBLESHOOTING ✦ WEB DEVELOPMENT ✦ WORDPRESS  CRM SYSTEMS ✦ 95%+ CSAT ✦ REMOTE ASSISTANCE ✦ SEO &amp; PERFORMANCE ✦&nbsp;</span>
+    <span>CUSTOMER SERVICE ✦ TECHNICAL SUPPORT ✦ TROUBLESHOOTING ✦ WEB DEVELOPMENT ✦ WORDPRESS ✦ CRM SYSTEMS ✦ 95%+ CSAT ✦ REMOTE ASSISTANCE ✦ SEO &amp; PERFORMANCE ✦&nbsp;</span>
+  </div>
+</div>
+
+<!-- ============ 01 · WORK ============ -->
+<section id="work" class="section" data-tint="blue">
+  <div class="container">
+    <div class="sec-head fade-in">
+      <span class="sec-kicker mono">01 · Career log</span>
+      <h2 class="sec-title">Every role, taken from<br>first call to <em>resolved.</em></h2>
+      <p class="sec-sub">Twelve years across cable, telecom, mobile and the open web — scroll the pipeline and the console on the left advances the way a real ticket does.</p>
     </div>
 
-    <!-- EmailJS SDK -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-    <script type="text/javascript">
-       (function(){
-          // ⚠️ REPLACE WITH YOUR ACTUAL EMAILJS PUBLIC KEY
-          emailjs.init({ publicKey: "YOUR_PUBLIC_KEY_HERE" });
-       })();
-    </script>
-    
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    
-    <script src="script.js"></script>
+    <div class="work-grid">
+      <aside class="work-console glass-card" aria-live="polite">
+        <span class="mono-label mono">CAREER LOG · LIVE</span>
+        <div class="console-index"><span id="workIndex">01</span><span class="console-total mono">/ 05</span></div>
+        <h3 id="workCompany">KCTV</h3>
+        <p id="workRole" class="mono">Customer Service Representative</p>
+        <div class="console-bar"><i id="workBar"></i></div>
+        <p class="console-hint mono">SCROLL TO ADVANCE ↓</p>
+      </aside>
+
+      <ol class="steps">
+        <li class="step glass-card fade-in" data-index="1" data-company="KCTV" data-role="Customer Service Representative">
+          <header><span class="step-no mono">STEP 01</span><span class="chip chip-green mono">RESOLVED</span></header>
+          <h3>KCTV</h3><h4 class="mono">Customer Service Representative</h4>
+          <ul>
+            <li>Handled customer inquiries and complaints via phone and email</li>
+            <li>Resolved billing issues and service interruptions</li>
+            <li>Managed customer accounts and service upgrades</li>
+            <li>Maintained 95%+ customer satisfaction rating</li>
+          </ul>
+        </li>
+        <li class="step glass-card fade-in" data-index="2" data-company="AT&amp;T / DirecTV" data-role="Customer Service Representative">
+          <header><span class="step-no mono">STEP 02</span><span class="chip chip-green mono">RESOLVED</span></header>
+          <h3>AT&amp;T / DirecTV</h3><h4 class="mono">Customer Service Representative</h4>
+          <ul>
+            <li>Assisted customers with TV, internet and phone services</li>
+            <li>Troubleshot technical issues with satellite receivers</li>
+            <li>Processed orders and scheduled technician visits</li>
+            <li>Consistently exceeded performance metrics</li>
+          </ul>
+        </li>
+        <li class="step glass-card fade-in" data-index="3" data-company="Samsung" data-role="Mobile Devices Technical Support">
+          <header><span class="step-no mono">STEP 03</span><span class="chip chip-green mono">RESOLVED</span></header>
+          <h3>Samsung</h3><h4 class="mono">Mobile Devices Technical Support</h4>
+          <ul>
+            <li>Provided technical support for smartphones and tablets</li>
+            <li>Diagnosed hardware and software issues</li>
+            <li>Guided customers through troubleshooting steps</li>
+            <li>Documented and escalated unresolved issues</li>
+          </ul>
+        </li>
+        <li class="step glass-card fade-in" data-index="4" data-company="Kalibo Cable Television Network, Inc." data-role="Video Editor &amp; Videographer">
+          <header><span class="step-no mono">STEP 04</span><span class="chip chip-amber mono">ON AIR</span></header>
+          <h3>Kalibo Cable Television Network, Inc.</h3><h4 class="mono">Video Editor &amp; Videographer</h4>
+          <ul>
+            <li>Filmed clients, places, and establishments for broadcast and promotional purposes</li>
+            <li>Edited videos using Adobe Premiere Pro and CapCut for professional delivery</li>
+            <li>Created dynamic animations and visual effects using Adobe After Effects</li>
+            <li>Managed end-to-end video production from filming to final export</li>
+            <li>Enhanced video quality through color grading, transitions, and motion graphics</li>
+          </ul>
+        </li>
+        <li class="step glass-card fade-in" data-index="5" data-company="Freelance" data-role="Web Design &amp; Development">
+          <header><span class="step-no mono">STEP 05</span><span class="chip chip-blue mono">LIVE</span></header>
+          <h3>Freelance</h3><h4 class="mono">Web Design &amp; Development</h4>
+          <ul>
+            <li>Designed and developed responsive websites</li>
+            <li>Provided technical support for web applications</li>
+            <li>Managed client communication and requirements</li>
+            <li>Implemented SEO and performance optimization</li>
+          </ul>
+        </li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 02 · PROJECTS ============ -->
+<section id="projects" class="section" data-tint="cyan">
+  <div class="container">
+    <div class="sec-head fade-in">
+      <span class="sec-kicker mono">02 · Selected work</span>
+      <h2 class="sec-title">Briefs that became<br><em>live builds.</em></h2>
+      <p class="sec-sub">Projects synced live from the cloud — open any preview to inspect it full-size. New case files land here the moment they ship.</p>
+      <span class="proj-count mono" id="projCount">— / —</span>
+    </div>
+    <div class="projects-grid" id="projectsGrid">
+      <div class="proj-state mono"><i class="fas fa-circle-notch fa-spin"></i> LOADING PROJECTS FROM CLOUD…</div>
+    </div>
+    <noscript><p class="proj-state mono">Enable JavaScript to load the live project cloud.</p></noscript>
+  </div>
+</section>
+
+<!-- ============ 03 · ABOUT ============ -->
+<section id="about" class="section" data-tint="amber">
+  <div class="container">
+    <div class="sec-head fade-in">
+      <span class="sec-kicker mono">03 · About</span>
+      <h2 class="sec-title">Turning “it doesn't work”<br>into <em>“it works.”</em></h2>
+    </div>
+    <div class="about-grid">
+      <div class="about-copy fade-in">
+        <p>I'm a dedicated Customer Service and Technical Support professional with over 12 years of experience helping customers resolve issues and improve their experience. My background includes technical support for mobile devices and web development.</p>
+        <p>I specialize in troubleshooting complex issues, explaining technical concepts clearly, and providing exceptional service. My approach combines technical knowledge with strong interpersonal skills to deliver solutions that satisfy customers.</p>
+      </div>
+      <blockquote class="quote glass-card fade-in">
+        <p>“I specialize in troubleshooting complex issues, explaining technical concepts clearly, and providing exceptional service.”</p>
+        <cite class="mono">— PAUL · NUMANCIA, PH · GMT+8</cite>
+      </blockquote>
+    </div>
+    <div class="stats fade-in">
+      <div class="stat"><span class="stat-num" data-count="12" data-suffix="+">0</span><span class="stat-label mono">YEARS IN SUPPORT</span></div>
+      <div class="stat"><span class="stat-num" data-count="95" data-suffix="%+">0</span><span class="stat-label mono">CSAT RATING</span></div>
+      <div class="stat"><span class="stat-num" data-count="5" data-suffix="">0</span><span class="stat-label mono">TEAMS &amp; ROLES</span></div>
+      <div class="stat"><span class="stat-num" data-count="24" data-suffix="h">0</span><span class="stat-label mono">REPLY TIME</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 04 · SKILLS ============ -->
+<section id="skills" class="section" data-tint="green">
+  <div class="container">
+    <div class="sec-head fade-in">
+      <span class="sec-kicker mono">04 · Capabilities</span>
+      <h2 class="sec-title">Everything the<br>ticket <em>demands.</em></h2>
+      <p class="sec-sub">One pipeline, five disciplines — the full path from a frustrated caller to a working, indexed site.</p>
+    </div>
+    <div class="skills-grid">
+      <article class="skill-card glass-card fade-in">
+        <div class="skill-icon"><i class="fas fa-headset" aria-hidden="true"></i></div>
+        <h3>Customer Service</h3>
+        <p>Conflict resolution and empathy that turn frustrated callers into loyal customers.</p>
+        <div class="skill-tags"><span class="chip mono">Conflict resolution</span><span class="chip mono">Active listening</span><span class="chip mono">Empathy</span><span class="chip mono">Problem-solving</span></div>
+      </article>
+      <article class="skill-card glass-card fade-in">
+        <div class="skill-icon"><i class="fas fa-screwdriver-wrench" aria-hidden="true"></i></div>
+        <h3>Technical Support</h3>
+        <p>Structured diagnostics for hardware and software — remote or on the line.</p>
+        <div class="skill-tags"><span class="chip mono">Troubleshooting</span><span class="chip mono">Diagnostics</span><span class="chip mono">Hardware/Software</span><span class="chip mono">Remote assistance</span></div>
+      </article>
+      <article class="skill-card glass-card fade-in">
+        <div class="skill-icon"><i class="fas fa-phone-volume" aria-hidden="true"></i></div>
+        <h3>Call Center</h3>
+        <p>High-volume call handling with quality assurance and metrics that stay green.</p>
+        <div class="skill-tags"><span class="chip mono">CRM systems</span><span class="chip mono">Call handling</span><span class="chip mono">Quality assurance</span><span class="chip mono">Performance metrics</span></div>
+      </article>
+      <article class="skill-card glass-card fade-in">
+        <div class="skill-icon"><i class="fas fa-code" aria-hidden="true"></i></div>
+        <h3>Web Development</h3>
+        <p>Responsive sites built by hand — and supported long after launch.</p>
+        <div class="skill-tags"><span class="chip mono">HTML</span><span class="chip mono">CSS</span><span class="chip mono">JavaScript</span><span class="chip mono">WordPress</span><span class="chip mono">SEO</span></div>
+      </article>
+      <article class="skill-card glass-card fade-in">
+        <div class="skill-icon"><i class="fas fa-comments" aria-hidden="true"></i></div>
+        <h3>Communication</h3>
+        <p>Technical concepts explained clearly, documented properly, trained patiently.</p>
+        <div class="skill-tags"><span class="chip mono">Clear explanations</span><span class="chip mono">Documentation</span><span class="chip mono">Training</span><span class="chip mono">Multilingual support</span></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 05 · CONTACT ============ -->
+<section id="contact" class="section" data-tint="blue">
+  <div class="container">
+    <div class="sec-head fade-in">
+      <span class="sec-kicker mono">05 · Contact</span>
+      <h2 class="sec-title">Have a project? Let's take it<br>from first ticket to <em>working site.</em></h2>
+      <p class="sec-sub">Tell me what you're building — or what's breaking. I'll reply within 24 hours with first questions and a rough plan.</p>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-side fade-in">
+        <div class="email-row glass-card">
+          <div><span class="mono-label mono">DIRECT LINE</span><a href="mailto:jpaulcipriano@gmail.com" class="email-link">jpaulcipriano@gmail.com</a></div>
+          <button id="copyEmail" class="btn btn-ghost btn-sm mono" type="button" data-email="jpaulcipriano@gmail.com">COPY</button>
+        </div>
+        <ul class="hero-chips mono">
+          <li><i class="dot dot-green"></i> RESPONSE &lt; 24H · GMT+8</li>
+          <li>SUPPORT · TROUBLESHOOTING · WEB</li>
+        </ul>
+        <div class="contact-info">
+          <div class="info-item"><i class="fas fa-envelope" aria-hidden="true"></i><div><b class="mono">Email</b><a href="mailto:jpaulcipriano@gmail.com">jpaulcipriano@gmail.com</a></div></div>
+          <div class="info-item"><i class="fas fa-phone" aria-hidden="true"></i><div><b class="mono">Phone</b><a href="tel:+639660593695">+63 966 059 3695</a></div></div>
+          <div class="info-item"><i class="fas fa-location-dot" aria-hidden="true"></i><div><b class="mono">Location</b><span>Numancia, PH</span></div></div>
+        </div>
+      </div>
+      <form id="contactForm" class="contact-form glass-card fade-in" novalidate>
+        <span class="mono-label mono">PROJECT BRIEF</span>
+        <label class="mono" for="cfName">Name *</label>
+        <input id="cfName" name="name" type="text" required placeholder="Your name" autocomplete="name">
+        <label class="mono" for="cfEmail">Email *</label>
+        <input id="cfEmail" name="email" type="email" required placeholder="you@company.com" autocomplete="email">
+        <label class="mono" for="cfType">Project type</label>
+        <select id="cfType" name="project_type">
+          <option>Customer support</option>
+          <option>Technical troubleshooting</option>
+          <option>Web development</option>
+          <option>WordPress site</option>
+          <option>Other</option>
+        </select>
+        <label class="mono" for="cfMsg">The brief *</label>
+        <textarea id="cfMsg" name="message" required placeholder="A sentence or two is plenty — I'll ask the rest."></textarea>
+        <button id="sendBtn" class="btn btn-primary" type="submit">Send the brief <i class="fas fa-arrow-right" aria-hidden="true"></i></button>
+        <p id="formStatus" class="form-status mono" role="status"></p>
+      </form>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="footer">
+  <div class="container footer-grid">
+    <div>
+      <a href="#home" class="logo">PAUL<span class="logo-dot">.</span></a>
+      <p class="mono footer-tag">DESIGNED IN THE OPEN · BUILT BY HAND · EVERY TICKET RESOLVED</p>
+    </div>
+    <nav class="footer-links mono" aria-label="Footer">
+      <a href="#work">WORK</a><a href="#projects">PROJECTS</a><a href="#about">ABOUT</a><a href="#contact">CONTACT</a>
+    </nav>
+    <a href="#home" class="mono back-top">BACK TO TOP ↑</a>
+  </div>
+  <div class="container footer-bottom mono">
+    <span>© <span id="year">2026</span> PAUL — ALL WIRES HAND-BENT</span>
+    <a href="#" id="adminTrigger" class="admin-trigger" tabindex="-1" aria-hidden="true">Admin</a>
+  </div>
+</footer>
+
+<!-- ============ ADMIN MODAL ============ -->
+<div id="adminModal" class="modal" role="dialog" aria-modal="true" aria-label="Admin settings">
+  <div class="modal-content">
+    <span id="closeAdmin" class="close-btn" role="button" tabindex="0" aria-label="Close admin panel">×</span>
+    <div id="adminLogin">
+      <span class="mono-label mono">RESTRICTED · CONSOLE</span>
+      <h2>Admin Settings</h2>
+      <p class="hint mono">ENTER ADMIN PASSWORD TO MANAGE PROJECTS</p>
+      <input type="password" id="adminPass" placeholder="Password" autocomplete="current-password">
+      <button id="loginBtn" class="btn btn-primary" type="button">Login</button>
+      <p class="hint mono">Hint: default password is <code>paul2023</code></p>
+    </div>
+    <div id="adminDashboard" style="display:none">
+      <h3 id="formTitle">Add New Project</h3>
+      <label class="mono" for="projTitle">Title</label>
+      <input id="projTitle" type="text" placeholder="Project title">
+      <label class="mono" for="projDesc">Description</label>
+      <textarea id="projDesc" placeholder="What does it do?"></textarea>
+      <label class="mono" for="projVideo">Video URL (YouTube / Vimeo)</label>
+      <input id="projVideo" type="url" placeholder="https://youtube.com/watch?v=…">
+      <label class="mono" for="projImageFile">Upload project image(s)</label>
+      <input id="projImageFile" type="file" accept="image/*" multiple>
+      <p id="uploadStatus" class="mono" style="display:none">Uploading image...</p>
+      <div class="modal-actions">
+        <button id="saveProjBtn" class="btn btn-primary" type="button">Add Project</button>
+        <button id="cancelEditBtn" class="btn btn-ghost" type="button" style="display:none">Cancel</button>
+      </div>
+      <h3 class="manage-title">Manage Projects</h3>
+      <ul id="adminProjList"></ul>
+    </div>
+  </div>
+</div>
+
+<!-- ============ LIGHTBOX ============ -->
+<div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="Enlarged project image">
+  <span id="closeLightbox" class="close-btn lightbox-close" role="button" tabindex="0" aria-label="Close image">×</span>
+  <img id="lightboxImg" alt="Project preview enlarged">
+</div>
+
+<div id="toast" class="toast mono" role="status" aria-live="polite"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
