@@ -17,9 +17,9 @@ const IMGBB_API_KEY = "d2f5e9da99064c41bdf0f8feafd5d741";
 
 /* Optional: paste real EmailJS keys to use EmailJS as primary sender.
    Leave as-is to use FormSubmit (real delivery, one-time confirmation). */
-const EMAILJS_SERVICE_ID = 'service_wxmu6km';
-const EMAILJS_TEMPLATE_ID = 'template_s5wn5qc';
-const EMAILJS_PUBLIC_KEY = '7CkZhPkESGq-gODgG';
+const EMAILJS_SERVICE_ID = 'YOUR_SERVICE_ID';
+const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID';
+const EMAILJS_PUBLIC_KEY = 'YOUR_PUBLIC_KEY';
 
 const ADMIN_PASSWORD = 'paul2023';
 const CONTACT_EMAIL = 'jpaulcipriano@gmail.com';
