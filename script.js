@@ -14,11 +14,16 @@ const firebaseConfig = {
   appId: "1:978444249147:web:0706b95b50cdbf1f86d41e"
 };
 const IMGBB_API_KEY = "d2f5e9da99064c41bdf0f8feafd5d741";
-const EMAILJS_SERVICE_ID = 'YOUR_SERVICE_ID';
-const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID';
-const EMAILJS_PUBLIC_KEY = 'YOUR_PUBLIC_KEY';
+
+/* Optional: paste real EmailJS keys to use EmailJS as primary sender.
+   Leave as-is to use FormSubmit (real delivery, one-time confirmation). */
+const EMAILJS_SERVICE_ID = 'service_wxmu6km';
+const EMAILJS_TEMPLATE_ID = 'template_s5wn5qc';
+const EMAILJS_PUBLIC_KEY = '7CkZhPkESGq-gODgG';
+
 const ADMIN_PASSWORD = 'paul2023';
 const CONTACT_EMAIL = 'jpaulcipriano@gmail.com';
+const FORMSUBMIT_ENDPOINT = 'https://formsubmit.co/ajax/' + encodeURIComponent(CONTACT_EMAIL);
 
 let db = null;
 try { if (window.firebase) { firebase.initializeApp(firebaseConfig); db = firebase.firestore(); } }
@@ -310,7 +315,7 @@ window.toggleDesc = function (btn, id) {
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && lb.style.display === 'flex') shut(); });
 })();
 
-/* ---------- 8 · CONTACT + COPY ---------- */
+/* ---------- 8 · CONTACT + COPY (real email delivery) ---------- */
 (function () {
   const copy = $('#copyEmail');
   if (copy) copy.addEventListener('click', async () => {
@@ -323,30 +328,85 @@ window.toggleDesc = function (btn, id) {
     copy.textContent = 'COPIED ✓'; toast('EMAIL COPIED ✓');
     setTimeout(() => copy.textContent = 'COPY', 1800);
   });
+
   const form = $('#contactForm'); if (!form) return;
   const btn = $('#sendBtn'), status = $('#formStatus');
   const original = btn.innerHTML;
-  function reset() { btn.innerHTML = original; btn.disabled = false; }
-  form.addEventListener('submit', e => {
+  const resetBtn = () => { btn.innerHTML = original; btn.disabled = false; };
+  const setStatus = (cls, msg) => { status.className = 'form-status mono ' + cls; status.textContent = msg; };
+
+  const emailjsReady = () =>
+    window.emailjs &&
+    !EMAILJS_SERVICE_ID.startsWith('YOUR_') &&
+    !EMAILJS_TEMPLATE_ID.startsWith('YOUR_') &&
+    !EMAILJS_PUBLIC_KEY.startsWith('YOUR_');
+
+  async function sendViaFormSubmit(fd) {
+    const res = await fetch(FORMSUBMIT_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        name: fd.get('name'),
+        email: fd.get('email'),
+        project_type: fd.get('project_type'),
+        message: fd.get('message'),
+        _subject: 'Portfolio brief — ' + fd.get('project_type'),
+        _template: 'table',
+        _captcha: 'false',
+        _honey: ''
+      })
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    const ok = String(data.success) === 'true';
+    const needsActivation = /confirm|activat/i.test(data.message || '');
+    if (!ok && !needsActivation) throw new Error(data.message || 'Delivery rejected');
+    return { ok, needsActivation };
+  }
+
+  function openMailDraft(fd) {
+    const subject = encodeURIComponent('Project brief — ' + fd.get('project_type'));
+    const body = encodeURIComponent(
+      `Name: ${fd.get('name')}\nEmail: ${fd.get('email')}\nProject type: ${fd.get('project_type')}\n\n${fd.get('message')}`
+    );
+    location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
+  }
+
+  form.addEventListener('submit', async e => {
     e.preventDefault();
     if (!form.reportValidity()) return;
     const fd = new FormData(form);
-    const name = fd.get('name'), email = fd.get('email'), type = fd.get('project_type'), msg = fd.get('message');
-    btn.disabled = true; btn.innerHTML = 'Sending… <i class="fas fa-circle-notch fa-spin"></i>';
-    status.className = 'form-status mono'; status.textContent = '';
-    function mailto() {
-      const subject = encodeURIComponent('Project brief — ' + type);
-      const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\nProject type: ${type}\n\n${msg}`);
-      location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
-      status.classList.add('ok');
-      status.textContent = 'BRIEF DRAFTED ✓ — YOUR MAIL APP SHOULD OPEN WITH EVERYTHING PRE-FILLED.';
-      reset();
+    btn.disabled = true;
+    btn.innerHTML = 'Sending… <i class="fas fa-circle-notch fa-spin"></i>';
+    setStatus('', 'SENDING…');
+
+    /* 1 — EmailJS (only if you've pasted real keys) */
+    if (emailjsReady()) {
+      try {
+        await emailjs.sendForm(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, form);
+        setStatus('ok', 'BRIEF SENT ✓ — I WILL REPLY WITHIN 24 HOURS.');
+        form.reset(); resetBtn(); toast('MESSAGE SENT ✓');
+        return;
+      } catch (err) { console.warn('EmailJS failed, trying FormSubmit:', err); }
     }
-    if (window.emailjs && !EMAILJS_SERVICE_ID.startsWith('YOUR_')) {
-      emailjs.sendForm(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, form)
-        .then(() => { status.classList.add('ok'); status.textContent = 'BRIEF SENT ✓ — I WILL REPLY WITHIN 24 HOURS.'; form.reset(); reset(); toast('MESSAGE SENT ✓'); })
-        .catch(err => { console.warn('EmailJS failed, using mailto:', err); mailto(); });
-    } else mailto();
+
+    /* 2 — FormSubmit: real server-side delivery to your inbox */
+    try {
+      const r = await sendViaFormSubmit(fd);
+      if (r.needsActivation) {
+        setStatus('ok', 'ONE-TIME CHECK: FORMSUBMIT SENT A CONFIRMATION LINK TO ' + CONTACT_EMAIL + '. CLICK IT, THEN SEND AGAIN.');
+      } else {
+        setStatus('ok', 'BRIEF SENT ✓ — DELIVERED TO ' + CONTACT_EMAIL + '.');
+        form.reset(); toast('MESSAGE SENT ✓');
+      }
+      resetBtn();
+      return;
+    } catch (err) { console.warn('FormSubmit failed, opening mail draft:', err); }
+
+    /* 3 — Last resort: pre-filled draft in the visitor's mail app */
+    openMailDraft(fd);
+    setStatus('err', 'DIRECT DELIVERY UNAVAILABLE — YOUR MAIL APP SHOULD OPEN WITH A PRE-FILLED DRAFT.');
+    resetBtn();
   });
 })();
 
