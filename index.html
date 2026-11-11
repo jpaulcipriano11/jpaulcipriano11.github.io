@@ -65,23 +65,47 @@
 
     <div class="scene rise d3">
       <div class="scene-head mono">
-        <span>SCENE 01 · SUPPORT HEADSET</span>
-        <span class="live"><i class="dot dot-green pulse"></i> LIVE CANVAS</span>
+        <span>SCENE 01 · RTX 5090 CLASS GPU</span>
+        <span class="live" id="sceneLive"><i class="dot dot-green pulse"></i> LOADING ENGINE</span>
       </div>
       <div class="scene-stage">
-        <canvas id="sceneCanvas" tabindex="0" aria-label="Interactive 3D headset. Drag to orbit, double-click to flip wireframe and rendered, arrow keys rotate, scroll to zoom."></canvas>
+        <canvas id="sceneCanvas" tabindex="0" aria-label="GPU-rendered 3D graphics card. Drag to orbit, wheel to zoom, double-click to flip wireframe and rendered, arrow keys rotate."></canvas>
+        <div class="scene-fallback" id="sceneFallback" hidden>
+          <svg viewBox="0 0 240 140" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <rect x="16" y="24" width="208" height="86" rx="12"/>
+            <circle cx="64" cy="67" r="25"/><circle cx="120" cy="67" r="25"/><circle cx="176" cy="67" r="25"/>
+            <circle cx="64" cy="67" r="6"/><circle cx="120" cy="67" r="6"/><circle cx="176" cy="67" r="6"/>
+            <rect x="6" y="38" width="9" height="58" rx="2"/>
+            <path d="M44 110v12M56 110v12M68 110v12M80 110v12M92 110v12M104 110v12M116 110v12M128 110v12M140 110v12M152 110v12M164 110v12M176 110v12"/>
+          </svg>
+          <p class="mono">3D ACCELERATION UNAVAILABLE — STATIC PREVIEW</p>
+        </div>
+        <span class="fps-badge mono" id="fpsBadge">LOADING GPU…</span>
         <div class="scene-mode mono" role="group" aria-label="Render mode">
-          <button id="modeWire" class="is-on" aria-pressed="true" type="button">WIREFRAME</button>
-          <button id="modeRender" aria-pressed="false" type="button">RENDERED</button>
+          <button id="modeWire" aria-pressed="false" type="button">WIREFRAME</button>
+          <button id="modeRender" class="is-on" aria-pressed="true" type="button">RENDERED</button>
         </div>
       </div>
-      <p class="scene-hint mono">DRAG TO ORBIT · DOUBLE-CLICK TO FLIP · ARROW KEYS WORK TOO</p>
-      <div class="scene-controls mono" aria-label="Scene controls">
-        <label class="ctl"><span>SPEED</span><input id="ctlSpeed" type="range" min="0" max="2" step="0.05" value="0.6"></label>
-        <label class="ctl"><span>ZOOM</span><input id="ctlZoom" type="range" min="0.7" max="1.6" step="0.01" value="1"></label>
-        <label class="ctl"><span>SIGNAL</span><input id="ctlSignal" type="range" min="0" max="120" step="1" value="60"></label>
+      <p class="scene-hint mono">DRAG TO ORBIT · WHEEL TO ZOOM · DOUBLE-CLICK TO FLIP · ARROW KEYS WORK TOO</p>
+      <div class="scene-controls mono" aria-label="GPU scene controls">
+        <label class="ctl"><span>QUALITY</span>
+          <select id="ctlQuality">
+            <option value="low">LOW</option>
+            <option value="medium">MEDIUM</option>
+            <option value="high">HIGH</option>
+            <option value="ultra" selected>ULTRA</option>
+          </select>
+        </label>
+        <label class="ctl"><span>ORBIT SPEED</span><input id="ctlSpeed" type="range" min="0" max="2" step="0.05" value="0.6"></label>
+        <label class="ctl"><span>DISTANCE</span><input id="ctlZoom" type="range" min="2.6" max="6.5" step="0.01" value="5.2"></label>
+        <label class="ctl"><span>FAN RPM</span><input id="ctlFan" type="range" min="0" max="100" step="1" value="65"></label>
+        <label class="ctl"><span>BLOOM</span><input id="ctlBloom" type="range" min="0" max="1.5" step="0.01" value="0.55"></label>
+        <label class="ctl"><span>KEY LIGHT</span><input id="ctlLight" type="range" min="0.2" max="2" step="0.01" value="1"></label>
+        <label class="ctl"><span>FINISH</span><input id="ctlFinish" type="range" min="0" max="1" step="0.01" value="0.35"></label>
+        <label class="ctl ctl-color"><span>RGB ACCENT</span><input id="ctlAccent" type="color" value="#5b8cff"></label>
         <label class="ctl ctl-toggle"><span>GRID</span><input id="ctlGrid" type="checkbox" checked><i class="switch" aria-hidden="true"></i></label>
         <label class="ctl ctl-toggle"><span>GLOW</span><input id="ctlGlow" type="checkbox" checked><i class="switch" aria-hidden="true"></i></label>
+        <button id="ctlRandom" class="ctl-btn" type="button">⚄ RANDOM</button>
         <button id="ctlReset" class="ctl-btn" type="button">⟲ RESET</button>
         <button id="ctlExport" class="ctl-btn" type="button">↓ PNG</button>
       </div>
@@ -91,7 +115,7 @@
 
 <div class="marquee" aria-hidden="true">
   <div class="marquee-track mono">
-    <span>CUSTOMER SERVICE ✦ TECHNICAL SUPPORT ✦ TROUBLESHOOTING ✦ WEB DEVELOPMENT ✦ WORDPRESS  CRM SYSTEMS ✦ 95%+ CSAT ✦ REMOTE ASSISTANCE ✦ SEO &amp; PERFORMANCE ✦&nbsp;</span>
+    <span>CUSTOMER SERVICE ✦ TECHNICAL SUPPORT ✦ TROUBLESHOOTING ✦ WEB DEVELOPMENT ✦ WORDPRESS ✦ CRM SYSTEMS ✦ 95%+ CSAT ✦ REMOTE ASSISTANCE ✦ SEO &amp; PERFORMANCE ✦&nbsp;</span>
     <span>CUSTOMER SERVICE ✦ TECHNICAL SUPPORT ✦ TROUBLESHOOTING ✦ WEB DEVELOPMENT ✦ WORDPRESS ✦ CRM SYSTEMS ✦ 95%+ CSAT ✦ REMOTE ASSISTANCE ✦ SEO &amp; PERFORMANCE ✦&nbsp;</span>
   </div>
 </div>
@@ -367,5 +391,17 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script src="script.js"></script>
+<script src="scene.js"></script>
+<script>
+setTimeout(function(){
+  if(!window.__sceneReady && !window.__sceneFailed){
+    var f=document.getElementById('sceneFallback'),c=document.getElementById('sceneCanvas'),b=document.getElementById('fpsBadge'),l=document.getElementById('sceneLive');
+    if(f){f.hidden=false;var p=f.querySelector('p');if(p)p.textContent='SCENE ENGINE NOT LOADED — VERIFY scene.js IS NEXT TO index.html';}
+    if(c)c.style.display='none';
+    if(b)b.textContent='ENGINE MISSING';
+    if(l)l.textContent='FALLBACK';
+  }
+},10000);
+</script>
 </body>
 </html>

@@ -1,6 +1,6 @@
 /* ============================================================
    PAUL — PORTFOLIO ENGINE
-   wireframe console · dark/light · live canvas · cloud projects
+   (GPU scene lives in scene.js — this file owns everything else)
    ============================================================ */
 'use strict';
 
@@ -38,10 +38,9 @@ function toast(msg) {
   clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
 }
 
-/* ---------- 1 · THEME (dark / light) ---------- */
+/* ---------- 1 · THEME ---------- */
 (function () {
-  const root = document.documentElement;
-  const btn = $('#themeToggle');
+  const root = document.documentElement, btn = $('#themeToggle');
   function apply(t, announce) {
     root.setAttribute('data-theme', t);
     try { localStorage.setItem('paul-theme', t); } catch (e) {}
@@ -74,7 +73,6 @@ function toast(msg) {
     }
   }
   addEventListener('scroll', onScroll, { passive: true }); onScroll();
-
   if (menuToggle && navLinks) {
     menuToggle.addEventListener('click', () => {
       const open = navLinks.classList.toggle('active');
@@ -89,18 +87,15 @@ function toast(msg) {
     addEventListener('resize', () => { if (innerWidth > 768) navLinks.classList.remove('active'); });
     document.addEventListener('keydown', e => { if (e.key === 'Escape') navLinks.classList.remove('active'); });
   }
-
   const links = $$('.nav-links a[href^="#"]').filter(a => !a.classList.contains('nav-cta'));
   const secObs = new IntersectionObserver(es => es.forEach(en => {
     if (en.isIntersecting) links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + en.target.id));
   }), { rootMargin: '-40% 0px -55% 0px' });
   $$('main section[id]').forEach(s => secObs.observe(s));
-
   const revObs = new IntersectionObserver(es => es.forEach((en, i) => {
     if (en.isIntersecting) { setTimeout(() => en.target.classList.add('visible'), i * 70); revObs.unobserve(en.target); }
   }), { threshold: 0.12 });
   $$('.fade-in').forEach(el => revObs.observe(el));
-
   const glow = $('#cursorGlow');
   if (glow && matchMedia('(pointer: fine)').matches && !reducedMotion) {
     document.addEventListener('mousemove', e => {
@@ -144,7 +139,6 @@ function toast(msg) {
     }), { threshold: 0.4 });
     obs.observe(el);
   });
-
   const steps = $$('.step');
   const idx = $('#workIndex'), comp = $('#workCompany'), role = $('#workRole'), bar = $('#workBar');
   if (steps.length && idx) {
@@ -161,247 +155,7 @@ function toast(msg) {
   }
 })();
 
-/* ---------- 5 · LIVE CANVAS SCENE (wireframe headset) ---------- */
-(function () {
-  const canvas = $('#sceneCanvas'); if (!canvas) return;
-  const ctx = canvas.getContext('2d'); if (!ctx) return;
-  const stage = canvas.parentElement;
-  let W = 0, H = 0, DPR = 1;
-  function resize() {
-    DPR = Math.min(devicePixelRatio || 1, 2);
-    W = stage.clientWidth; H = stage.clientHeight;
-    canvas.width = Math.round(W * DPR); canvas.height = Math.round(H * DPR);
-  }
-  new ResizeObserver(resize).observe(stage); resize();
-
-  const S = { yaw: .6, pitch: -.16, yawT: .6, pitchT: -.16, zoom: 1, speed: .6, signal: 60, grid: true, glow: true, mode: 'wire', dragging: false };
-
-  /* geometry — built once */
-  function buildHeadset() {
-    const verts = [], faces = [], edges = [];
-    const addV = (x, y, z) => (verts.push([x, y, z]), verts.length - 1);
-    const quad = (a, b, c, d) => faces.push([a, b, c, d]);
-    const R = 1.02, tube = .055, arcSeg = 26, tubeSeg = 8;
-    let prev = null;
-    for (let i = 0; i <= arcSeg; i++) {
-      const t = Math.PI * i / arcSeg, nx = Math.cos(t), ny = Math.sin(t);
-      const cx = nx * R, cy = ny * R, ring = [];
-      for (let j = 0; j < tubeSeg; j++) {
-        const a = 2 * Math.PI * j / tubeSeg;
-        ring.push(addV(cx + Math.cos(a) * tube * nx, cy + Math.cos(a) * tube * ny, Math.sin(a) * tube));
-      }
-      if (prev) for (let j = 0; j < tubeSeg; j++) quad(prev[j], prev[(j + 1) % tubeSeg], ring[(j + 1) % tubeSeg], ring[j]);
-      prev = ring;
-    }
-    function cup(side) {
-      const cx = side * (R + .06), cy = -.04, r = .34, h = .16, seg = 18;
-      const outer = [], inner = [];
-      for (let j = 0; j < seg; j++) {
-        const a = 2 * Math.PI * j / seg, y = cy + Math.cos(a) * r, z = Math.sin(a) * r;
-        outer.push(addV(cx + side * h / 2, y, z)); inner.push(addV(cx - side * h / 2, y, z));
-      }
-      for (let j = 0; j < seg; j++) quad(outer[j], outer[(j + 1) % seg], inner[(j + 1) % seg], inner[j]);
-      const co = addV(cx + side * h / 2, cy, 0), ci = addV(cx - side * h / 2, cy, 0);
-      for (let j = 0; j < seg; j++) { faces.push([co, outer[j], outer[(j + 1) % seg]]); faces.push([ci, inner[(j + 1) % seg], inner[j]]); }
-    }
-    cup(1); cup(-1);
-    const boom = [];
-    for (let i = 0; i <= 10; i++) {
-      const t = i / 10;
-      boom.push(addV(-R - .06 + t * .55, -.1 - Math.sin(t * Math.PI * .5) * .62, .1 + t * .5));
-    }
-    const end = verts[boom[boom.length - 1]], mr = .09, lat = 6, lon = 8, sph = [];
-    for (let i = 0; i <= lat; i++) {
-      const ph = Math.PI * i / lat, row = [];
-      for (let j = 0; j < lon; j++) {
-        const th = 2 * Math.PI * j / lon;
-        row.push(addV(end[0] + mr * Math.sin(ph) * Math.cos(th), end[1] + mr * Math.cos(ph), end[2] + mr * Math.sin(ph) * Math.sin(th)));
-      }
-      sph.push(row);
-    }
-    for (let i = 0; i < lat; i++) for (let j = 0; j < lon; j++) quad(sph[i][j], sph[i][(j + 1) % lon], sph[i + 1][(j + 1) % lon], sph[i + 1][j]);
-    const seen = new Set();
-    faces.forEach(f => { for (let k = 0; k < f.length; k++) { const a = f[k], b = f[(k + 1) % f.length], key = a < b ? a + '_' + b : b + '_' + a; if (!seen.has(key)) { seen.add(key); edges.push([a, b]); } } });
-    for (let i = 0; i < boom.length - 1; i++) edges.push([boom[i], boom[i + 1]]);
-    return { verts, faces, edges, mic: end };
-  }
-  const G = buildHeadset();
-
-  /* particles */
-  let P = [];
-  function seed(n) {
-    while (P.length < n) P.push({ r: 1.7 + Math.random() * 1.1, a: Math.random() * Math.PI * 2, y: -1.2 + Math.random() * 2.6, sp: .08 + Math.random() * .22, ph: Math.random() * 6.28, size: 1.4 + Math.random() * 1.8, hue: Math.random() });
-    P.length = n;
-  }
-  seed(S.signal);
-
-  /* palette */
-  const hex = h => { h = h.trim().replace('#', ''); if (h.length === 3) h = h.split('').map(c => c + c).join(''); const n = parseInt(h, 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; };
-  let C = {};
-  function readPalette() {
-    const cs = getComputedStyle(document.documentElement);
-    const g = k => cs.getPropertyValue(k).trim();
-    C = { accent: hex(g('--accent') || '#5B8CFF'), cyan: hex(g('--cyan') || '#22C8E8'), amber: hex(g('--amber') || '#FFB224'), surface: hex(g('--surface') || '#111726'), bg: g('--bg') || '#0A0D14', line: g('--line-2') || 'rgba(148,163,199,.28)', grid: g('--grid') || 'rgba(91,140,255,.08)' };
-  }
-  readPalette();
-  document.addEventListener('themechange', readPalette);
-  const rgba = (c, a) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
-  const mix = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
-
-  /* pulses from mic */
-  let pulses = [], lastPulse = 0;
-
-  function draw(time) {
-    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-    ctx.clearRect(0, 0, W, H);
-    const cy = Math.cos(S.yaw), sy = Math.sin(S.yaw), cp = Math.cos(S.pitch), sp = Math.sin(S.pitch);
-    const f = Math.min(W, H) * 1.35 * S.zoom, d = 4.6;
-    const proj = (x, y, z) => {
-      const x1 = x * cy + z * sy, z1 = -x * sy + z * cy;
-      const y1 = y * cp - z1 * sp, z2 = y * sp + z1 * cp;
-      const s = f / (z2 + d);
-      return [W / 2 + x1 * s, H / 2 - y1 * s, z2, x1, y1];
-    };
-    if (S.grid) {
-      ctx.strokeStyle = C.grid; ctx.lineWidth = 1;
-      for (let g = -3; g <= 3.01; g += .75) {
-        let a = proj(g, -1.55, -3), b = proj(g, -1.55, 3);
-        ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
-        a = proj(-3, -1.55, g); b = proj(3, -1.55, g);
-        ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
-      }
-    }
-    /* particles */
-    P.forEach(p => {
-      const x = Math.cos(p.a) * p.r, z = Math.sin(p.a) * p.r, y = p.y + Math.sin(time + p.ph) * .08;
-      const q = proj(x, y, z), s = 4.6 / (q[2] + d), r = p.size * s;
-      const col = p.hue < .6 ? C.accent : (p.hue < .85 ? C.cyan : C.amber);
-      if (S.glow) { ctx.fillStyle = rgba(col, .12); ctx.beginPath(); ctx.arc(q[0], q[1], r * 3, 0, 6.29); ctx.fill(); }
-      ctx.fillStyle = rgba(col, .8); ctx.beginPath(); ctx.arc(q[0], q[1], r, 0, 6.29); ctx.fill();
-    });
-    /* object */
-    const pts = G.verts.map(v => proj(v[0], v[1], v[2]));
-    if (S.mode === 'wire') {
-      const pass = (w, mul) => {
-        ctx.lineWidth = w;
-        G.edges.forEach(e => {
-          const a = pts[e[0]], b = pts[e[1]];
-          const al = clamp(1.15 - ((a[2] + b[2]) / 2 + d) / 9, .1, .85) * mul;
-          ctx.strokeStyle = rgba(C.accent, al);
-          ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
-        });
-      };
-      if (S.glow) pass(3.2, .16);
-      pass(1, 1);
-    } else {
-      const order = G.faces.map((fc, i) => {
-        let z = 0; fc.forEach(v => z += pts[v][2]);
-        return [z / fc.length, i];
-      }).sort((a, b) => b[0] - a[0]);
-      const L = [-.45, .75, -.5];
-      order.forEach(([, i]) => {
-        const fc = G.faces[i];
-        const a = pts[fc[0]], b = pts[fc[1]], c = pts[fc[2]];
-        const ux = b[3] - a[3], uy = b[4] - a[4], uz = b[2] - a[2];
-        const vx = c[3] - a[3], vy = c[4] - a[4], vz = c[2] - a[2];
-        let nx = uy * vz - uz * vy, ny = uz * vx - ux * vz, nz = ux * vy - uy * vx;
-        const nl = Math.hypot(nx, ny, nz) || 1; nx /= nl; ny /= nl; nz /= nl;
-        const light = Math.max(0, nx * L[0] + ny * L[1] + nz * L[2]);
-        const base = mix(C.surface, C.accent, .22);
-        const col = base.map(v => clamp(v * (.45 + .8 * light), 0, 255));
-        ctx.fillStyle = rgba(col, .97);
-        ctx.strokeStyle = rgba(C.accent, .25); ctx.lineWidth = .6;
-        ctx.beginPath(); ctx.moveTo(a[0], a[1]);
-        for (let k = 1; k < fc.length; k++) ctx.lineTo(pts[fc[k]][0], pts[fc[k]][1]);
-        ctx.closePath(); ctx.fill(); ctx.stroke();
-      });
-    }
-    /* mic signal pulses */
-    if (!reducedMotion && time - lastPulse > 2) { lastPulse = time; pulses.push(time); }
-    pulses = pulses.filter(t => time - t < 1.6);
-    const m = proj(G.mic[0], G.mic[1], G.mic[2]);
-    pulses.forEach(t => {
-      const p = (time - t) / 1.6;
-      ctx.strokeStyle = rgba(C.green || C.accent, (1 - p) * .5);
-      ctx.lineWidth = 1.2;
-      ctx.beginPath(); ctx.arc(m[0], m[1], 8 + p * 64 * S.zoom, 0, 6.29); ctx.stroke();
-    });
-  }
-
-  /* loop — single rAF, paused offscreen/hidden */
-  let running = true, last = performance.now();
-  new IntersectionObserver(es => es.forEach(en => running = en.isIntersecting), { threshold: 0 }).observe(stage);
-  document.addEventListener('visibilitychange', () => last = performance.now());
-  (function frame(now) {
-    requestAnimationFrame(frame);
-    const dt = Math.min((now - last) / 1000, .05); last = now;
-    if (!running || document.hidden) return;
-    if (!S.dragging && !reducedMotion) S.yawT += dt * S.speed * .5;
-    S.yaw += (S.yawT - S.yaw) * .08;
-    S.pitch += (S.pitchT - S.pitch) * .08;
-    if (!reducedMotion) P.forEach(p => p.a += p.sp * dt);
-    draw(now / 1000);
-  })(last);
-
-  /* interaction */
-  let px = 0, py = 0;
-  canvas.addEventListener('pointerdown', e => { S.dragging = true; px = e.clientX; py = e.clientY; canvas.setPointerCapture(e.pointerId); canvas.classList.add('grabbing'); });
-  canvas.addEventListener('pointermove', e => {
-    if (!S.dragging) return;
-    S.yawT += (e.clientX - px) * .006;
-    S.pitchT = clamp(S.pitchT + (e.clientY - py) * .005, -1.1, 1.1);
-    px = e.clientX; py = e.clientY;
-  });
-  ['pointerup', 'pointercancel'].forEach(ev => canvas.addEventListener(ev, () => { S.dragging = false; canvas.classList.remove('grabbing'); }));
-  canvas.addEventListener('dblclick', () => setMode(S.mode === 'wire' ? 'render' : 'wire'));
-  canvas.addEventListener('wheel', e => { e.preventDefault(); S.zoom = clamp(S.zoom * (e.deltaY < 0 ? 1.06 : .94), .7, 1.6); sync(); }, { passive: false });
-  canvas.addEventListener('keydown', e => {
-    const k = e.key;
-    if (k === 'ArrowLeft') { S.yawT -= .18; e.preventDefault(); }
-    if (k === 'ArrowRight') { S.yawT += .18; e.preventDefault(); }
-    if (k === 'ArrowUp') { S.pitchT = clamp(S.pitchT - .12, -1.1, 1.1); e.preventDefault(); }
-    if (k === 'ArrowDown') { S.pitchT = clamp(S.pitchT + .12, -1.1, 1.1); e.preventDefault(); }
-    if (k === ' ' || k === 'Enter') { setMode(S.mode === 'wire' ? 'render' : 'wire'); e.preventDefault(); }
-  });
-
-  /* controls */
-  const elSpeed = $('#ctlSpeed'), elZoom = $('#ctlZoom'), elSignal = $('#ctlSignal'), elGrid = $('#ctlGrid'), elGlow = $('#ctlGlow');
-  const bWire = $('#modeWire'), bRender = $('#modeRender');
-  function setMode(m) {
-    S.mode = m;
-    bWire.classList.toggle('is-on', m === 'wire'); bWire.setAttribute('aria-pressed', String(m === 'wire'));
-    bRender.classList.toggle('is-on', m === 'render'); bRender.setAttribute('aria-pressed', String(m === 'render'));
-  }
-  function sync() {
-    elSpeed.value = S.speed; elZoom.value = S.zoom; elSignal.value = S.signal;
-    elGrid.checked = S.grid; elGlow.checked = S.glow;
-  }
-  elSpeed.addEventListener('input', () => S.speed = parseFloat(elSpeed.value));
-  elZoom.addEventListener('input', () => S.zoom = parseFloat(elZoom.value));
-  elSignal.addEventListener('input', () => { S.signal = parseInt(elSignal.value, 10); seed(S.signal); });
-  elGrid.addEventListener('change', () => S.grid = elGrid.checked);
-  elGlow.addEventListener('change', () => S.glow = elGlow.checked);
-  bWire.addEventListener('click', () => setMode('wire'));
-  bRender.addEventListener('click', () => setMode('render'));
-  $('#ctlReset').addEventListener('click', () => {
-    Object.assign(S, { yawT: .6, pitchT: -.16, zoom: 1, speed: .6, signal: 60, grid: true, glow: true });
-    seed(60); setMode('wire'); sync(); toast('SCENE RESET ⟲');
-  });
-  $('#ctlExport').addEventListener('click', () => {
-    const out = document.createElement('canvas');
-    out.width = canvas.width; out.height = canvas.height;
-    const octx = out.getContext('2d');
-    octx.fillStyle = C.bg; octx.fillRect(0, 0, out.width, out.height);
-    octx.drawImage(canvas, 0, 0);
-    const a = document.createElement('a');
-    a.download = 'paul-headset-scene.png';
-    a.href = out.toDataURL('image/png');
-    a.click(); toast('SCENE EXPORTED ↓');
-  });
-  sync();
-})();
-
-/* ---------- 6 · PROJECTS CLOUD ---------- */
+/* ---------- 5 · PROJECTS CLOUD ---------- */
 function getVideoEmbedUrl(url) {
   if (!url) return null;
   const yt = url.match(/(?:youtube\.com\/(?:[^/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?/\s]{11})/);
@@ -451,7 +205,7 @@ window.toggleDesc = function (btn, id) {
   btn.textContent = open ? 'READ LESS' : 'READ MORE';
 };
 
-/* ---------- 7 · ADMIN ---------- */
+/* ---------- 6 · ADMIN ---------- */
 (function () {
   const modal = $('#adminModal'), trigger = $('#adminTrigger'), closeBtn = $('#closeAdmin');
   const login = $('#adminLogin'), dash = $('#adminDashboard'), loginBtn = $('#loginBtn'), pass = $('#adminPass');
@@ -468,12 +222,10 @@ window.toggleDesc = function (btn, id) {
     else { toast('INCORRECT PASSWORD ✕'); pass.value = ''; }
   });
   if (pass) pass.addEventListener('keydown', e => { if (e.key === 'Enter') loginBtn.click(); });
-
   const title = $('#projTitle'), file = $('#projImageFile'), desc = $('#projDesc'), video = $('#projVideo');
   const save = $('#saveProjBtn'), cancel = $('#cancelEditBtn'), formTitle = $('#formTitle');
   const list = $('#adminProjList'), status = $('#uploadStatus');
   let editId = null;
-
   window.loadAdminProjects = function () {
     if (!list || !db) return;
     list.innerHTML = '<li style="justify-content:center">Loading…</li>';
@@ -547,7 +299,7 @@ window.toggleDesc = function (btn, id) {
   };
 })();
 
-/* ---------- 8 · LIGHTBOX ---------- */
+/* ---------- 7 · LIGHTBOX ---------- */
 (function () {
   const lb = $('#lightbox'), img = $('#lightboxImg'), close = $('#closeLightbox');
   if (!lb) return;
@@ -558,7 +310,7 @@ window.toggleDesc = function (btn, id) {
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && lb.style.display === 'flex') shut(); });
 })();
 
-/* ---------- 9 · CONTACT + COPY ---------- */
+/* ---------- 8 · CONTACT + COPY ---------- */
 (function () {
   const copy = $('#copyEmail');
   if (copy) copy.addEventListener('click', async () => {
@@ -571,7 +323,6 @@ window.toggleDesc = function (btn, id) {
     copy.textContent = 'COPIED ✓'; toast('EMAIL COPIED ✓');
     setTimeout(() => copy.textContent = 'COPY', 1800);
   });
-
   const form = $('#contactForm'); if (!form) return;
   const btn = $('#sendBtn'), status = $('#formStatus');
   const original = btn.innerHTML;
@@ -599,5 +350,5 @@ window.toggleDesc = function (btn, id) {
   });
 })();
 
-/* ---------- 10 · BOOT ---------- */
+/* ---------- 9 · BOOT ---------- */
 loadProjects();
